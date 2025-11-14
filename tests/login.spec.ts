@@ -1,4 +1,4 @@
-import { expect, test } from '../src/api/merge.fixture';
+import { expect, test } from '../src/api/fixtures/merge.fixture';
 
 test.describe('Admin', () => {
   test('should display admin greeting and logout button when authenticated', async ({
