@@ -6,6 +6,7 @@
   "scripts": {
     "format": "npx prettier --write .",
     "lint": "npx eslint . --max-warnings=0",
+    "tsc": "tsc --noEmit",
     "test": "npx playwright test",
     "test:headed": "npm run test -- --headed",
     "test:ui-mode": "npm run test -- --ui"
