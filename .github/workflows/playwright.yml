@@ -19,10 +19,12 @@ permissions:
     id-token: write
 
 jobs:
-    run_tests:
+    tests:
+        name: Run Tests
         timeout-minutes: 15
         runs-on: ubuntu-latest
         steps:
+            # Checkout repositories
             - name: Checkout test repository
               uses: actions/checkout@v4
               with:
@@ -33,57 +35,64 @@ jobs:
                   repository: Tokarsky98/GroceryMartAI
                   token: ${{ secrets.APP_REPO_TOKEN }}
                   path: app
-            - uses: actions/setup-node@v4
+
+            # Setup node
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
               with:
                   node-version: 20
                   cache: 'npm'
                   cache-dependency-path: tests/package-lock.json
-            - name: Get installed Playwright version
+
+            # Cache dependencies
+            - name: Get Playwright version
               id: playwright-version
               working-directory: tests
               run: echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package-lock.json').packages?.['node_modules/@playwright/test']?.version)")" >> $GITHUB_ENV
-            - name: Cache playwright binaries
+            - name: Cache Playwright browsers
               uses: actions/cache@v4
               id: playwright-cache
               with:
-                  path: |
-                      ~/.cache/ms-playwright
+                  path: ~/.cache/ms-playwright
                   key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
-            - name: Cache node_modules (tests)
+            - name: Cache test dependencies
               uses: actions/cache@v4
-              id: node-cache-tests
+              id: cache-tests
               with:
-                  path: |
-                      tests/node_modules
-                  key: node_modules-tests-${{ hashFiles('tests/package-lock.json') }}
-            - name: Cache node_modules (backend)
+                  path: tests/node_modules
+                  key: modules-tests-${{ hashFiles('tests/package-lock.json') }}
+            - name: Cache backend dependencies
               uses: actions/cache@v4
-              id: node-cache-backend
+              id: cache-backend
               with:
                   path: app/backend/node_modules
-                  key: node_modules-backend-${{ hashFiles('app/backend/package-lock.json') }}
-            - name: Cache node_modules (frontend)
+                  key: modules-backend-${{ hashFiles('app/backend/package.json') }}
+            - name: Cache frontend dependencies
               uses: actions/cache@v4
-              id: node-cache-frontend
+              id: cache-frontend
               with:
                   path: app/frontend/node_modules
-                  key: node_modules-frontend-${{ hashFiles('app/frontend/package-lock.json') }}
+                  key: modules-frontend-${{ hashFiles('app/frontend/package.json') }}
+
+            # Install dependencies
             - name: Install test dependencies
-              if: steps.node-cache-tests.outputs.cache-hit != 'true'
+              if: steps.cache-tests.outputs.cache-hit != 'true'
               working-directory: tests
               run: npm ci
-            - name: Install Playwright Browsers
+            - name: Install Playwright browsers
               if: steps.playwright-cache.outputs.cache-hit != 'true'
               working-directory: tests
               run: npx playwright install --with-deps
             - name: Install backend dependencies
-              if: steps.node-cache-backend.outputs.cache-hit != 'true'
+              if: steps.cache-backend.outputs.cache-hit != 'true'
               working-directory: app/backend
-              run: npm ci
+              run: npm install
             - name: Install frontend dependencies
-              if: steps.node-cache-frontend.outputs.cache-hit != 'true'
+              if: steps.cache-frontend.outputs.cache-hit != 'true'
               working-directory: app/frontend
-              run: npm ci
+              run: npm install
+
+            # Start application servers
             - name: Start backend server
               working-directory: app/backend
               env:
@@ -100,7 +109,9 @@ jobs:
               run: |
                   npm start &
                   npx wait-on http://localhost:3000 --timeout 30000
-            - name: Run tests
+
+            # Run tests
+            - name: Run Playwright tests
               working-directory: tests
               env:
                   BASE_URL: http://localhost:3000
@@ -109,7 +120,9 @@ jobs:
                   USER_EMAIL: ${{ secrets.USER_EMAIL }}
                   USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
               run: npm run test -- --retries=1
-            - name: Archive test results
+
+            # Upload results
+            - name: Upload test results
               uses: actions/upload-artifact@v4
               if: always()
               with:
@@ -118,7 +131,7 @@ jobs:
                       tests/playwright-report/**/*.*
                       tests/test-results/**/*.*
                   retention-days: 7
-            - name: Publish all test report
+            - name: Publish test report
               if: success() || failure()
               uses: mikepenz/action-junit-report@v5
               with:
