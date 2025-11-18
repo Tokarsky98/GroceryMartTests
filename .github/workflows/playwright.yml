@@ -97,7 +97,7 @@ jobs:
               run: |
                   cd app/backend && PORT=5000 JWT_SECRET=${{ secrets.JWT_SECRET }} NODE_ENV=development npm run dev &
                   cd app/frontend && REACT_APP_API_URL=http://localhost:5000/api npm start &
-                  sleep 10
+                  sleep 5
 
             # Run tests
             - name: Run Playwright tests
