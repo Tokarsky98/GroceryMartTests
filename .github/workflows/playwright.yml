@@ -95,22 +95,9 @@ jobs:
             # Start application servers
             - name: Start backend and frontend
               run: |
-                  # Start backend
-                  cd app/backend
-                  PORT=5000 JWT_SECRET=${{ secrets.JWT_SECRET }} NODE_ENV=development npm run dev > ../../backend.log 2>&1 &
-                  echo "Started backend (PID: $!)"
-                  cd ../..
-
-                  # Start frontend
-                  cd app/frontend
-                  REACT_APP_API_URL=http://localhost:5000/api npm start > ../../frontend.log 2>&1 &
-                  echo "Started frontend (PID: $!)"
-                  cd ../..
-
-                  # Give servers time to start
-                  echo "Waiting 10 seconds for servers to initialize..."
+                  cd app/backend && PORT=5000 JWT_SECRET=${{ secrets.JWT_SECRET }} NODE_ENV=development npm run dev &
+                  cd app/frontend && REACT_APP_API_URL=http://localhost:5000/api npm start &
                   sleep 10
-                  echo "Servers should be ready, proceeding to tests..."
 
             # Run tests
             - name: Run Playwright tests
