@@ -1,9 +1,9 @@
 import { Locator } from '@playwright/test';
 
 export class LabelWithField {
-  label: Locator;
-  field: Locator;
-  validationMessage?: Locator;
+  readonly label: Locator;
+  readonly field: Locator;
+  readonly validationMessage?: Locator;
 
   constructor(label: Locator, field: Locator, validationMessage?: Locator) {
     this.label = label;
