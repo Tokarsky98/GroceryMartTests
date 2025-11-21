@@ -4,18 +4,19 @@ import {
   USER_EMAIL,
   USER_PASSWORD,
 } from '../../../config/env.config';
+import { HomePage } from '../../ui/pages/home.page';
 import { authenticatedPage } from '../helpers/auth-page.helper';
 import { authToken } from '../helpers/auth-token.helper';
-import { Page, test as base } from '@playwright/test';
+import { test as base } from '@playwright/test';
 
 type AdminFixtures = {
   adminToken: string;
-  loggedAdminPage: Page;
+  loggedAdminHomePage: HomePage;
 };
 
 type UserFixtures = {
   userToken: string;
-  loggedUserPage: Page;
+  loggedUserHomePage: HomePage;
 };
 
 export const adminTest = base.extend<AdminFixtures>({
@@ -24,10 +25,10 @@ export const adminTest = base.extend<AdminFixtures>({
     await use(token);
   },
 
-  loggedAdminPage: async ({ adminToken, browser }, use) => {
-    const page = await authenticatedPage(browser, adminToken);
-    await use(page);
-    await page.close();
+  loggedAdminHomePage: async ({ adminToken, browser }, use) => {
+    const homePage = await authenticatedPage(browser, adminToken);
+    await use(homePage);
+    await homePage.page.close();
   },
 });
 
@@ -37,9 +38,9 @@ export const userTest = base.extend<UserFixtures>({
     await use(token);
   },
 
-  loggedUserPage: async ({ userToken, browser }, use) => {
-    const page = await authenticatedPage(browser, userToken);
-    await use(page);
-    await page.close();
+  loggedUserHomePage: async ({ userToken, browser }, use) => {
+    const homePage = await authenticatedPage(browser, userToken);
+    await use(homePage);
+    await homePage.page.close();
   },
 });
