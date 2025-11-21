@@ -1,4 +1,5 @@
 import { LabelWithField } from '../helpers/label-with-field.helper';
+import { LoginModel } from '../models/login.model';
 import { HomePage } from './home.page';
 import { Locator, Page } from '@playwright/test';
 
@@ -23,28 +24,28 @@ class SignUpPage {
       page.getByLabel('Name'),
       page.getByPlaceholder('Enter your name'),
       page
-        .locator('.form-group', { has: page.getByLabel('Name') })
+        .locator('.form-group', { hasText: 'Name' })
         .locator('.error-message'),
     );
     this.email = new LabelWithField(
       page.getByLabel('Email'),
       page.getByPlaceholder('Enter your email'),
       page
-        .locator('.form-group', { has: page.getByLabel('Email') })
+        .locator('.form-group', { hasText: 'Email' })
         .locator('.error-message'),
     );
     this.password = new LabelWithField(
       page.getByLabel('Password'),
       page.getByPlaceholder('Enter your password'),
       page
-        .locator('.form-group', { has: page.getByLabel('Password') })
+        .locator('.form-group', { hasText: 'Password' })
         .locator('.error-message'),
     );
     this.confirmPassword = new LabelWithField(
       page.getByLabel('Confirm Password'),
       page.getByPlaceholder('Confirm your password'),
       page
-        .locator('.form-group', { has: page.getByLabel('Confirm Password') })
+        .locator('.form-group', { hasText: 'Confirm Password' })
         .locator('.error-message'),
     );
     this.termsCheckbox = new LabelWithField(
@@ -52,7 +53,7 @@ class SignUpPage {
       page.getByRole('checkbox'),
       page
         .locator('.form-group', {
-          has: page.getByLabel('I accept the terms and conditions'),
+          hasText: 'I accept the terms and conditions',
         })
         .locator('.error-message'),
     );
@@ -76,6 +77,7 @@ export class LoginPage {
   readonly loginButton: Locator;
   readonly signUpLink: Locator;
   readonly forgotPasswordLink: Locator;
+  readonly toastMessage: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -85,14 +87,14 @@ export class LoginPage {
       page.getByLabel('Email'),
       page.getByPlaceholder('Enter your email'),
       page
-        .locator('.form-group', { has: page.getByLabel('Email') })
+        .locator('.form-group', { hasText: 'Email' })
         .locator('.error-message'),
     );
     this.password = new LabelWithField(
       page.getByLabel('Password'),
       page.getByPlaceholder('Enter your password'),
       page
-        .locator('.form-group', { has: page.getByLabel('Password') })
+        .locator('.form-group', { hasText: 'Password' })
         .locator('.error-message'),
     );
     this.loginButton = page.getByRole('button', { name: 'Login' });
@@ -100,6 +102,20 @@ export class LoginPage {
     this.forgotPasswordLink = page.getByRole('link', {
       name: 'Forgot Password?',
     });
+    this.toastMessage = page.locator('.toast').first();
+  }
+
+  async login(loginData: LoginModel): Promise<HomePage> {
+    await this.email.field.fill(loginData.email);
+    await this.password.field.fill(loginData.password);
+    await this.loginButton.click();
+    return new HomePage(this.page);
+  }
+
+  async failedLogin(loginData: LoginModel): Promise<void> {
+    await this.email.field.fill(loginData.email);
+    await this.password.field.fill(loginData.password);
+    await this.loginButton.click();
   }
 
   async clickSignUpLink(): Promise<SignUpPage> {
