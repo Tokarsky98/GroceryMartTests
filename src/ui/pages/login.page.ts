@@ -1,4 +1,5 @@
 import { LabelWithField } from '../helpers/label-with-field.helper';
+import { HomePage } from './home.page';
 import { Locator, Page } from '@playwright/test';
 
 class SignUpPage {
@@ -60,10 +61,10 @@ class SignUpPage {
     this.toastMessage = page.locator('.toast');
   }
 
-  //   async clickSignUpButton(): Promise<HomePage> {
-  //     await this.signUpButton.click();
-  //     return new HomePage(this.page);
-  //   }
+  async clickSignUpButton(): Promise<HomePage> {
+    await this.signUpButton.click();
+    return new HomePage(this.page);
+  }
 }
 
 export class LoginPage {
