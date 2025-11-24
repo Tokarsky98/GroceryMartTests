@@ -1,5 +1,6 @@
 import { LabelWithField } from '../helpers/label-with-field.helper';
 import { LoginModel } from '../models/login.model';
+import { SignUpModel } from '../models/sign-up.model';
 import { HomePage } from './home.page';
 import { Locator, Page } from '@playwright/test';
 
@@ -62,7 +63,12 @@ class SignUpPage {
     this.toastMessage = page.locator('.toast');
   }
 
-  async clickSignUpButton(): Promise<HomePage> {
+  async signUp(signUpUserData: SignUpModel): Promise<HomePage> {
+    await this.name.field.fill(signUpUserData.name);
+    await this.email.field.fill(signUpUserData.email);
+    await this.password.field.fill(signUpUserData.password);
+    await this.confirmPassword.field.fill(signUpUserData.confirmPassword);
+    await this.termsCheckbox.field.check();
     await this.signUpButton.click();
     return new HomePage(this.page);
   }
