@@ -1,9 +1,9 @@
 import { expect, test } from '../../../src/api/fixtures/merge.fixture';
+import { prepareRandomUser } from '../../../src/ui/factories/user.factory';
 import { LoginPage } from '../../../src/ui/pages/login.page';
 import {
   invalidCredentials,
   invalidInputs,
-  signUpData,
 } from '../../../src/ui/test-data/login.data';
 import {
   loginValidationMessages,
@@ -120,15 +120,18 @@ test.describe('Sign Up UI validation', () => {
   test('should display validation message when passwords do not match', async ({
     page,
   }) => {
+    const signUpUserData = prepareRandomUser();
     const loginPage = new LoginPage(page);
     await loginPage.goto();
 
     const signUpPage = await loginPage.clickSignUpLink();
 
-    await signUpPage.name.field.fill(signUpData.name);
-    await signUpPage.email.field.fill(signUpData.email);
-    await signUpPage.password.field.fill(signUpData.password);
-    await signUpPage.confirmPassword.field.fill('DifferentPassword123!');
+    await signUpPage.name.field.fill(signUpUserData.name);
+    await signUpPage.email.field.fill(signUpUserData.email);
+    await signUpPage.password.field.fill(signUpUserData.password);
+    await signUpPage.confirmPassword.field.fill(
+      signUpUserData.confirmPassword + 'diff',
+    );
     await signUpPage.termsCheckbox.field.check();
     await signUpPage.signUpButton.click();
 
@@ -140,15 +143,16 @@ test.describe('Sign Up UI validation', () => {
   test('should display validation message when terms are not accepted', async ({
     page,
   }) => {
+    const signUpUserData = prepareRandomUser();
     const loginPage = new LoginPage(page);
     await loginPage.goto();
 
     const signUpPage = await loginPage.clickSignUpLink();
 
-    await signUpPage.name.field.fill(signUpData.name);
-    await signUpPage.email.field.fill(signUpData.email);
-    await signUpPage.password.field.fill(signUpData.password);
-    await signUpPage.confirmPassword.field.fill(signUpData.confirmPassword);
+    await signUpPage.name.field.fill(signUpUserData.name);
+    await signUpPage.email.field.fill(signUpUserData.email);
+    await signUpPage.password.field.fill(signUpUserData.password);
+    await signUpPage.confirmPassword.field.fill(signUpUserData.confirmPassword);
     await signUpPage.signUpButton.click();
 
     await expect(signUpPage.termsCheckbox.validationMessage!).toHaveText(

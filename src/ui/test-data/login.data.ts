@@ -5,7 +5,6 @@ import {
   USER_PASSWORD,
 } from '../../../config/env.config';
 import { LoginModel } from '../models/login.model';
-import { SignUpModel } from '../models/sign-up.model';
 
 export const defaultUsers: Record<string, LoginModel> = {
   admin: {
@@ -42,11 +41,4 @@ export const invalidInputs: Record<string, LoginModel> = {
     email: '',
     password: '',
   },
-};
-
-export const signUpData: SignUpModel = {
-  name: 'Test User',
-  email: 'testuser@example.com',
-  password: 'Password123!',
-  confirmPassword: 'Password123!',
 };
