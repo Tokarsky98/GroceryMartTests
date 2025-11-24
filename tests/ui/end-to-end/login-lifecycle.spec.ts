@@ -1,6 +1,5 @@
 import { expect, test } from '../../../src/api/fixtures/merge.fixture';
 import { prepareRandomUser } from '../../../src/ui/factories/user.factory';
-import { SignUpModel } from '../../../src/ui/models/sign-up.model';
 import { HomePage } from '../../../src/ui/pages/home.page';
 import { LoginPage } from '../../../src/ui/pages/login.page';
 import { defaultUsers } from '../../../src/ui/test-data/login.data';
@@ -47,33 +46,30 @@ test.describe('Authentication', () => {
 });
 
 test.describe('User Registration and Login Flow', () => {
-  let signUpUserData: SignUpModel;
-
-  test.beforeEach(() => {
-    signUpUserData = prepareRandomUser();
-  });
-
-  test('should create new user and login with credentials', async ({
+  test('should register new user and login with credentials', async ({
     page,
   }) => {
+    const signUpUserData = prepareRandomUser();
     const loginPage = new LoginPage(page);
     await loginPage.goto();
 
     const signUpPage = await loginPage.clickSignUpLink();
-
     const homePage = await signUpPage.signUp(signUpUserData);
 
-    await expect
-      .soft(signUpPage.toastMessage)
-      .toHaveText(toastMessages.signUpSuccess);
+    await expect(signUpPage.toastMessage).toHaveText(
+      toastMessages.signUpSuccess,
+    );
+    await expect(homePage.navbar).toBeVisible();
+
+    await homePage.loginLink.click();
+    await loginPage.login({
+      email: signUpUserData.email,
+      password: signUpUserData.password,
+    });
+
+    await expect(loginPage.toastMessage).toHaveText(toastMessages.loginSuccess);
     await expect(homePage.userGreeting).toHaveText(
       `Hi, ${signUpUserData.name}`,
     );
-    await expect(homePage.logoutButton).toBeVisible();
-
-    await homePage.logoutButton.click();
-
-    await expect(homePage.userGreeting).toBeHidden();
-    await expect(homePage.loginLink).toBeVisible();
   });
 });
