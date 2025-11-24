@@ -1,127 +1,127 @@
 ---
 name: Playwright Tests
 on:
-    push:
-        branches: [ main, master ]
-    pull_request:
-        branches: [ main, master ]
-    workflow_dispatch:
-    # schedule:
-    #     - cron: '5 6 * * 1-5'
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+  # schedule:
+  #     - cron: '5 6 * * 1-5'
 
 concurrency:
-    group: playwright-tests-${{ github.ref }}
-    cancel-in-progress: true
+  group: playwright-tests-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
-    contents: read
-    checks: write
-    id-token: write
+  contents: read
+  checks: write
+  id-token: write
 
 jobs:
-    tests:
-        name: Run Tests
-        timeout-minutes: 15
-        runs-on: ubuntu-latest
-        steps:
-            # Checkout repositories
-            - name: Checkout test repository
-              uses: actions/checkout@v4
-              with:
-                  path: tests
-            - name: Checkout application repository
-              uses: actions/checkout@v4
-              with:
-                  repository: Tokarsky98/GroceryMartAI
-                  token: ${{ secrets.APP_REPO_TOKEN }}
-                  path: app
+  tests:
+    name: Run Tests
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout repositories
+      - name: Checkout test repository
+        uses: actions/checkout@v4
+        with:
+          path: tests
+      - name: Checkout application repository
+        uses: actions/checkout@v4
+        with:
+          repository: Tokarsky98/GroceryMartAI
+          token: ${{ secrets.APP_REPO_TOKEN }}
+          path: app
 
-            # Setup node
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: 20
-                  cache: 'npm'
-                  cache-dependency-path: tests/package-lock.json
+      # Setup node
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: tests/package-lock.json
 
-            # Cache dependencies
-            - name: Get Playwright version
-              id: playwright-version
-              working-directory: tests
-              run: echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package-lock.json').packages?.['node_modules/@playwright/test']?.version)")" >> $GITHUB_ENV
-            - name: Cache Playwright browsers
-              uses: actions/cache@v4
-              id: playwright-cache
-              with:
-                  path: ~/.cache/ms-playwright
-                  key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
-            - name: Cache test dependencies
-              uses: actions/cache@v4
-              id: cache-tests
-              with:
-                  path: tests/node_modules
-                  key: modules-tests-${{ hashFiles('tests/package-lock.json') }}
-            - name: Cache backend dependencies
-              uses: actions/cache@v4
-              id: cache-backend
-              with:
-                  path: app/backend/node_modules
-                  key: modules-backend-${{ hashFiles('app/backend/package.json') }}
-            - name: Cache frontend dependencies
-              uses: actions/cache@v4
-              id: cache-frontend
-              with:
-                  path: app/frontend/node_modules
-                  key: modules-frontend-${{ hashFiles('app/frontend/package.json') }}
+      # Cache dependencies
+      - name: Get Playwright version
+        id: playwright-version
+        working-directory: tests
+        run: echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package-lock.json').packages?.['node_modules/@playwright/test']?.version)")" >> $GITHUB_ENV
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+      - name: Cache test dependencies
+        uses: actions/cache@v4
+        id: cache-tests
+        with:
+          path: tests/node_modules
+          key: modules-tests-${{ hashFiles('tests/package-lock.json') }}
+      - name: Cache backend dependencies
+        uses: actions/cache@v4
+        id: cache-backend
+        with:
+          path: app/backend/node_modules
+          key: modules-backend-${{ hashFiles('app/backend/package.json') }}
+      - name: Cache frontend dependencies
+        uses: actions/cache@v4
+        id: cache-frontend
+        with:
+          path: app/frontend/node_modules
+          key: modules-frontend-${{ hashFiles('app/frontend/package.json') }}
 
-            # Install dependencies
-            - name: Install test dependencies
-              if: steps.cache-tests.outputs.cache-hit != 'true'
-              working-directory: tests
-              run: npm ci
-            - name: Install Playwright browsers
-              if: steps.playwright-cache.outputs.cache-hit != 'true'
-              working-directory: tests
-              run: npx playwright install --with-deps
-            - name: Install backend dependencies
-              if: steps.cache-backend.outputs.cache-hit != 'true'
-              working-directory: app/backend
-              run: npm install
-            - name: Install frontend dependencies
-              if: steps.cache-frontend.outputs.cache-hit != 'true'
-              working-directory: app/frontend
-              run: npm install
+      # Install dependencies
+      - name: Install test dependencies
+        if: steps.cache-tests.outputs.cache-hit != 'true'
+        working-directory: tests
+        run: npm ci
+      - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        working-directory: tests
+        run: npx playwright install --with-deps
+      - name: Install backend dependencies
+        if: steps.cache-backend.outputs.cache-hit != 'true'
+        working-directory: app/backend
+        run: npm install
+      - name: Install frontend dependencies
+        if: steps.cache-frontend.outputs.cache-hit != 'true'
+        working-directory: app/frontend
+        run: npm install
 
-            # Start application servers
-            - name: Start backend and frontend
-              run: |
-                  cd app/backend && PORT=5000 JWT_SECRET=${{ secrets.JWT_SECRET }} NODE_ENV=development npm run dev &
-                  cd app/frontend && REACT_APP_API_URL=http://localhost:5000/api npm start &
-                  sleep 5
+      # Start application servers
+      - name: Start backend and frontend
+        run: |
+          cd app/backend && PORT=5000 JWT_SECRET=${{ secrets.JWT_SECRET }} NODE_ENV=development npm run dev &
+          cd app/frontend && REACT_APP_API_URL=http://localhost:5000/api npm start &
+          sleep 5
 
-            # Run tests
-            - name: Run Playwright tests
-              working-directory: tests
-              env:
-                  BASE_URL: http://localhost:3000
-                  ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
-                  ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
-                  USER_EMAIL: ${{ secrets.USER_EMAIL }}
-                  USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
-              run: npm run test -- --retries=1
+      # Run tests
+      - name: Run Playwright tests
+        working-directory: tests
+        env:
+          BASE_URL: http://localhost:3000
+          ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+          USER_EMAIL: ${{ secrets.USER_EMAIL }}
+          USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
+        run: npm run test -- --retries=1
 
-            # Upload results
-            - name: Upload test results
-              uses: actions/upload-artifact@v4
-              if: always()
-              with:
-                  name: playwright-reports
-                  path: |
-                      tests/playwright-report/**/*.*
-                      tests/test-results/**/*.*
-                  retention-days: 7
-            - name: Publish test report
-              if: success() || failure()
-              uses: mikepenz/action-junit-report@v5
-              with:
-                  report_paths: 'tests/playwright-report/results.xml'
+      # Upload results
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-reports
+          path: |
+            tests/playwright-report/**/*.*
+            tests/test-results/**/*.*
+          retention-days: 7
+      - name: Publish test report
+        if: success() || failure()
+        uses: mikepenz/action-junit-report@v5
+        with:
+          report_paths: 'tests/playwright-report/results.xml'
