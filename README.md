@@ -2,7 +2,7 @@
 
 Hi! My name is Mateusz and I work as an QA Engineer with over three and a half years of experience, specializing in Playwright and TypeScript test automation from the very beginning of my career.
 
-On a daily basis, I use AI tools such as Claude, DeepL and GitHub Copilot.I also hold an ISTQB certification and continuously develop my skills. I am curious about the world, learn quickly and communicate effectively with people.
+On a daily basis, I use AI tools such as Claude, DeepL and GitHub Copilot. I also hold an ISTQB certification and continuously develop my skills. I am curious about the world, learn quickly and communicate effectively with people.
 
 I appreciate every feedback and thank you for your time!
 
