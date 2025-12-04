@@ -1,3 +1,4 @@
+import { NavbarComponent } from '../components/navbar.component';
 import { ProductComponent } from '../components/product.component';
 import { Locator, Page } from '@playwright/test';
 
@@ -8,7 +9,6 @@ export class HomePage {
   readonly searchButton: Locator;
   readonly categoryFilter: Locator;
   readonly productCards: Locator;
-  readonly cartBadge: Locator;
   readonly toastMessage: Locator;
 
   constructor(page: Page) {
@@ -18,7 +18,6 @@ export class HomePage {
     this.searchButton = page.getByRole('button', { name: 'Search' });
     this.categoryFilter = page.locator('select.filter-dropdown');
     this.productCards = page.locator('div.product-card');
-    this.cartBadge = page.locator('span.badge');
     this.toastMessage = page.locator('div.toast.success');
   }
 

@@ -13,13 +13,15 @@ import {
 
 test.describe('Authentication', () => {
   test('should login admin via API', async ({ loggedAdminHomePage }) => {
-    await expect(loggedAdminHomePage.userGreeting).toHaveText('Hi, Admin');
-    await expect(loggedAdminHomePage.logoutButton).toBeVisible();
+    const navbar = loggedAdminHomePage.navbar;
+    await expect(navbar.userGreeting).toHaveText('Hi, Admin');
+    await expect(navbar.logoutButton).toBeVisible();
   });
 
   test('should login user via API', async ({ loggedUserHomePage }) => {
-    await expect(loggedUserHomePage.userGreeting).toHaveText('Hi, John Doe');
-    await expect(loggedUserHomePage.logoutButton).toBeVisible();
+    const navbar = loggedUserHomePage.navbar;
+    await expect(navbar.userGreeting).toHaveText('Hi, John Doe');
+    await expect(navbar.logoutButton).toBeVisible();
   });
 });
 

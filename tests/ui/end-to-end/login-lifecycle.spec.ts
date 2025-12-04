@@ -14,10 +14,11 @@ test.describe('Authentication', () => {
     await expect(loginPage.header).toBeVisible();
 
     const homePage = await loginPage.login(defaultUsers.admin);
+    const navbar = homePage.navbar;
 
     await expect(loginPage.toastMessage).toHaveText(toastMessages.loginSuccess);
-    await expect(homePage.userGreeting).toHaveText('Hi, Admin');
-    await expect(homePage.logoutButton).toBeVisible();
+    await expect(navbar.userGreeting).toHaveText('Hi, Admin');
+    await expect(navbar.logoutButton).toBeVisible();
   });
 
   test('should login user via form with credentials', async ({ page }) => {
@@ -28,20 +29,22 @@ test.describe('Authentication', () => {
     await expect(loginPage.header).toBeVisible();
 
     const homePage = await loginPage.login(defaultUsers.user);
+    const navbar = homePage.navbar;
 
     await expect(loginPage.toastMessage).toHaveText(toastMessages.loginSuccess);
-    await expect(homePage.userGreeting).toHaveText('Hi, John Doe');
-    await expect(homePage.logoutButton).toBeVisible();
+    await expect(navbar.userGreeting).toHaveText('Hi, John Doe');
+    await expect(navbar.logoutButton).toBeVisible();
   });
 
   test('should not display user greeting when not authenticated', async ({
     page,
   }) => {
     const homePage = new HomePage(page);
+    const navbar = homePage.navbar;
     await homePage.goto();
 
-    await expect(homePage.userGreeting).toBeHidden();
-    await expect(homePage.logoutButton).toBeHidden();
+    await expect(navbar.userGreeting).toBeHidden();
+    await expect(navbar.logoutButton).toBeHidden();
   });
 });
 
@@ -55,21 +58,19 @@ test.describe('User Registration and Login Flow', () => {
 
     const signUpPage = await loginPage.clickSignUpLink();
     const homePage = await signUpPage.signUp(signUpUserData);
+    const navbar = homePage.navbar;
 
     await expect(signUpPage.toastMessage).toHaveText(
       toastMessages.signUpSuccess,
     );
-    await expect(homePage.navbar).toBeVisible();
 
-    await homePage.loginLink.click();
+    await navbar.loginLink.click();
     await loginPage.login({
       email: signUpUserData.email,
       password: signUpUserData.password,
     });
 
     await expect(loginPage.toastMessage).toHaveText(toastMessages.loginSuccess);
-    await expect(homePage.userGreeting).toHaveText(
-      `Hi, ${signUpUserData.name}`,
-    );
+    await expect(navbar.userGreeting).toHaveText(`Hi, ${signUpUserData.name}`);
   });
 });
