@@ -8,7 +8,7 @@ I appreciate every feedback and thank you for your time!
 
 ## About
 
-This repository was created to showcase how test automation can effectively evolve when the application and the test automation project are maintained in separate repositories.  
+This repository was created to showcase how test automation can effectively evolve when the application and the test automation project are maintained in separate repositories.
 
 It is an evolving collection of advanced Playwright solutions, including:
 
