@@ -1,12 +1,12 @@
+import { authenticatedPage } from '@_api/helpers/auth-page.helper';
+import { authToken } from '@_api/helpers/auth-token.helper';
 import {
   ADMIN_EMAIL,
   ADMIN_PASSWORD,
   USER_EMAIL,
   USER_PASSWORD,
-} from '../../../config/env.config';
-import { HomePage } from '../../ui/pages/home.page';
-import { authenticatedPage } from '../helpers/auth-page.helper';
-import { authToken } from '../helpers/auth-token.helper';
+} from '@_config/env.config';
+import { HomePage } from '@_ui/pages/home.page';
 import { test as base } from '@playwright/test';
 
 type AdminFixtures = {
