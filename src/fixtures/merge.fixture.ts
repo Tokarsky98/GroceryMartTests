@@ -1,4 +1,4 @@
-import { adminTest, userTest } from './context.fixture';
+import { adminTest, userTest } from '@_fixtures/context.fixture';
 import { mergeTests } from '@playwright/test';
 
 export const test = mergeTests(adminTest, userTest);

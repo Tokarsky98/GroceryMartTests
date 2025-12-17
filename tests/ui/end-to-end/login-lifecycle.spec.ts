@@ -1,9 +1,9 @@
-import { expect, test } from '../../../src/api/fixtures/merge.fixture';
-import { prepareRandomUser } from '../../../src/ui/factories/user.factory';
-import { HomePage } from '../../../src/ui/pages/home.page';
-import { LoginPage } from '../../../src/ui/pages/login.page';
-import { defaultUsers } from '../../../src/ui/test-data/login.data';
-import { toastMessages } from '../../../src/ui/test-data/validation-messages.data';
+import { expect, test } from '@_fixtures/merge.fixture';
+import { prepareRandomUser } from '@_ui/factories/user.factory';
+import { HomePage } from '@_ui/pages/home.page';
+import { LoginPage } from '@_ui/pages/login.page';
+import { defaultUsers } from '@_ui/test-data/login.data';
+import { toastMessages } from '@_ui/test-data/validation-messages.data';
 
 test.describe('Authentication', () => {
   test('should login admin via form with credentials', async ({ page }) => {

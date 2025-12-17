@@ -1,5 +1,5 @@
-import { NavbarComponent } from '../components/navbar.component';
-import { ProductComponent } from '../components/product.component';
+import { NavbarComponent } from '@_ui/components/navbar.component';
+import { ProductComponent } from '@_ui/components/product.component';
 import { Locator, Page } from '@playwright/test';
 
 export class HomePage {

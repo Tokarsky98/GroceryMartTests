@@ -1,5 +1,5 @@
-import { BASE_URL } from '../../../config/env.config';
-import { HomePage } from '../../ui/pages/home.page';
+import { BASE_URL } from '@_config/env.config';
+import { HomePage } from '@_ui/pages/home.page';
 import { Browser } from '@playwright/test';
 
 export const authenticatedPage = async (

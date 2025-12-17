@@ -1,4 +1,4 @@
-import { SignUpModel } from '../models/sign-up.model';
+import { SignUpModel } from '@_ui/models/sign-up.model';
 import { faker } from '@faker-js/faker/locale/en';
 
 export function prepareRandomUser(): SignUpModel {

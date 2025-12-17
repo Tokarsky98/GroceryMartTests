@@ -1,7 +1,7 @@
-import { LabelWithField } from '../helpers/label-with-field.helper';
-import { LoginModel } from '../models/login.model';
-import { SignUpModel } from '../models/sign-up.model';
-import { HomePage } from './home.page';
+import { LabelWithField } from '@_ui/helpers/label-with-field.helper';
+import { LoginModel } from '@_ui/models/login.model';
+import { SignUpModel } from '@_ui/models/sign-up.model';
+import { HomePage } from '@_ui/pages/home.page';
 import { Locator, Page } from '@playwright/test';
 
 class SignUpPage {

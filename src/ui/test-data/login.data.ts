@@ -3,8 +3,8 @@ import {
   ADMIN_PASSWORD,
   USER_EMAIL,
   USER_PASSWORD,
-} from '../../../config/env.config';
-import { LoginModel } from '../models/login.model';
+} from '@_config/env.config';
+import { LoginModel } from '@_ui/models/login.model';
 
 export const defaultUsers: Record<string, LoginModel> = {
   admin: {
