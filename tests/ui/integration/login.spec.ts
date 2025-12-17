@@ -1,3 +1,4 @@
+import { expect, test } from '@_fixtures/merge.fixture';
 import { prepareRandomUser } from '@_ui/factories/user.factory';
 import { LoginPage } from '@_ui/pages/login.page';
 import { invalidCredentials, invalidInputs } from '@_ui/test-data/login.data';
@@ -6,7 +7,6 @@ import {
   signUpValidationMessages,
   toastMessages,
 } from '@_ui/test-data/validation-messages.data';
-import { expect, test } from 'src/fixtures/merge.fixture';
 
 test.describe('Authentication', () => {
   test('should login admin via API', async ({ loggedAdminHomePage }) => {
