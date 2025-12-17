@@ -1,4 +1,4 @@
-import { BASE_URL } from '../../../config/env.config';
+import { BASE_URL } from '@_config/env.config';
 import { APIRequestContext, expect } from '@playwright/test';
 
 export const authToken = async (
