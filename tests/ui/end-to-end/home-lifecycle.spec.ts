@@ -1,5 +1,5 @@
-import { HomePage } from '../../../src/ui/pages/home.page';
-import { categories, products } from '../../../src/ui/test-data/products.data';
+import { HomePage } from '@_src/ui/pages/home.page';
+import { categories, products } from '@_src/ui/test-data/products.data';
 import { expect, test } from '@playwright/test';
 
 test.describe('Home Page - Products', () => {

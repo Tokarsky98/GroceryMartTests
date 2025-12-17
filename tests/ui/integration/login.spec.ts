@@ -1,15 +1,15 @@
-import { expect, test } from '../../../src/api/fixtures/merge.fixture';
-import { prepareRandomUser } from '../../../src/ui/factories/user.factory';
-import { LoginPage } from '../../../src/ui/pages/login.page';
+import { expect, test } from '@_src/api/fixtures/merge.fixture';
+import { prepareRandomUser } from '@_src/ui/factories/user.factory';
+import { LoginPage } from '@_src/ui/pages/login.page';
 import {
   invalidCredentials,
   invalidInputs,
-} from '../../../src/ui/test-data/login.data';
+} from '@_src/ui/test-data/login.data';
 import {
   loginValidationMessages,
   signUpValidationMessages,
   toastMessages,
-} from '../../../src/ui/test-data/validation-messages.data';
+} from '@_src/ui/test-data/validation-messages.data';
 
 test.describe('Authentication', () => {
   test('should login admin via API', async ({ loggedAdminHomePage }) => {
