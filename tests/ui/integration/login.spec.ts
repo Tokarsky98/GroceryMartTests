@@ -1,4 +1,3 @@
-import { expect, test } from '@_fixtures/merge.fixture';
 import { prepareRandomUser } from '@_ui/factories/user.factory';
 import { LoginPage } from '@_ui/pages/login.page';
 import { invalidCredentials, invalidInputs } from '@_ui/test-data/login.data';
@@ -7,16 +6,17 @@ import {
   signUpValidationMessages,
   toastMessages,
 } from '@_ui/test-data/validation-messages.data';
+import { expect, test } from 'src/merge.fixture';
 
 test.describe('Authentication', () => {
-  test('should login admin via API', async ({ loggedAdminHomePage }) => {
-    const navbar = loggedAdminHomePage.navbar;
+  test('should login admin via API', async ({ adminHomePage }) => {
+    const navbar = adminHomePage.navbar;
     await expect(navbar.userGreeting).toHaveText('Hi, Admin');
     await expect(navbar.logoutButton).toBeVisible();
   });
 
-  test('should login user via API', async ({ loggedUserHomePage }) => {
-    const navbar = loggedUserHomePage.navbar;
+  test('should login user via API', async ({ userHomePage }) => {
+    const navbar = userHomePage.navbar;
     await expect(navbar.userGreeting).toHaveText('Hi, John Doe');
     await expect(navbar.logoutButton).toBeVisible();
   });

@@ -1,9 +1,9 @@
-import { expect, test } from '@_fixtures/merge.fixture';
 import { prepareRandomUser } from '@_ui/factories/user.factory';
 import { HomePage } from '@_ui/pages/home.page';
 import { LoginPage } from '@_ui/pages/login.page';
 import { defaultUsers } from '@_ui/test-data/login.data';
 import { toastMessages } from '@_ui/test-data/validation-messages.data';
+import { expect, test } from 'src/merge.fixture';
 
 test.describe('Authentication', () => {
   test('should login admin via form with credentials', async ({ page }) => {
