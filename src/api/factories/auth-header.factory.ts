@@ -17,5 +17,5 @@ export async function getAuthHeader(
   expect(token, 'Auth token should be present in response').toBeDefined();
   expect(typeof token, 'Auth token should be a string').toBe('string');
 
-  return { Authorization: token };
+  return { Authorization: `Bearer ${token}` };
 }
