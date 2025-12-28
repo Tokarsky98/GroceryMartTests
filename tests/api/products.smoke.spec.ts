@@ -1,4 +1,4 @@
-import { expect, test } from 'src/merge.fixture';
+import { expect, test } from '@_src/merge.fixture';
 
 test.describe('Products API endpoint', () => {
   test('get products returns status code 200', async ({ productsRequest }) => {

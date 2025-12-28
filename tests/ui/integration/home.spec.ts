@@ -1,6 +1,6 @@
+import { expect, test } from '@_src/merge.fixture';
 import { HomePage } from '@_ui/pages/home.page';
 import { products } from '@_ui/test-data/products.data';
-import { expect, test } from '@playwright/test';
 
 test.describe('Home Page - Products', () => {
   test('should get product by name and validate its details', async ({
