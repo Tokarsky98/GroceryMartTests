@@ -16,14 +16,20 @@ type AuthenticatedPageFixture = {
 
 export const authenticatedPageTest = base.extend<AuthenticatedPageFixture>({
   adminHomePage: async ({ request, browser }, use) => {
-    const headers = await getAuthHeader(request, ADMIN_EMAIL, ADMIN_PASSWORD);
+    const headers = await getAuthHeader(request, {
+      email: ADMIN_EMAIL,
+      password: ADMIN_PASSWORD,
+    });
     const homePage = await authenticatedPage(browser, headers);
     await use(homePage);
     await homePage.page.close();
   },
 
   userHomePage: async ({ request, browser }, use) => {
-    const headers = await getAuthHeader(request, USER_EMAIL, USER_PASSWORD);
+    const headers = await getAuthHeader(request, {
+      email: USER_EMAIL,
+      password: USER_PASSWORD,
+    });
     const homePage = await authenticatedPage(browser, headers);
     await use(homePage);
     await homePage.page.close();
