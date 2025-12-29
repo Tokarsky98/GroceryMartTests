@@ -5,6 +5,16 @@ import {
 import { expect, test } from '@_src/merge.fixture';
 
 test.describe('Verify products create operations', () => {
+  let createdProductIds: string[] = [];
+
+  // Cleanup all created products, even if test failed
+  test.afterEach(async ({ adminProductsRequest }) => {
+    for (const productId of createdProductIds) {
+      await expect(await adminProductsRequest.delete(productId)).toBeOK();
+    }
+    createdProductIds = [];
+  });
+
   test.describe('Authentication and Authorization', () => {
     test('should create product with admin authentication', async ({
       adminProductsRequest,
@@ -15,6 +25,9 @@ test.describe('Verify products create operations', () => {
       const response = await adminProductsRequest.post(productData);
       const responseBody = await response.json();
 
+      // Track for cleanup
+      createdProductIds.push(responseBody.id);
+
       expect(response.status()).toBe(expectedStatusCode);
       expect(responseBody).toHaveProperty('id');
       expect(responseBody.name).toBe(productData.name);
@@ -23,9 +36,6 @@ test.describe('Verify products create operations', () => {
       expect(responseBody.category).toBe(productData.category);
       expect(responseBody.stock).toBe(productData.stock);
       expect(responseBody.image).toBe(productData.image);
-
-      // Cleanup
-      await adminProductsRequest.delete(responseBody.id);
     });
 
     test('should not create product with user authentication', async ({
@@ -91,12 +101,12 @@ test.describe('Verify products create operations', () => {
       const firstResponseBody = await firstResponse.json();
       expect(firstResponse.status()).toBe(201);
 
+      // Track for cleanup
+      createdProductIds.push(firstResponseBody.id);
+
       // Try to create duplicate
       const duplicateResponse = await adminProductsRequest.post(productData);
       expect(duplicateResponse.status()).toBe(expectedStatusCode);
-
-      // Cleanup
-      await adminProductsRequest.delete(firstResponseBody.id);
     });
 
     test('should create product with zero stock', async ({
@@ -108,11 +118,11 @@ test.describe('Verify products create operations', () => {
       const response = await adminProductsRequest.post(productData);
       const responseBody = await response.json();
 
+      // Track for cleanup
+      createdProductIds.push(responseBody.id);
+
       expect(response.status()).toBe(expectedStatusCode);
       expect(responseBody.stock).toBe(0);
-
-      // Cleanup
-      await adminProductsRequest.delete(responseBody.id);
     });
 
     test('should create product with special characters in name', async ({
@@ -125,11 +135,11 @@ test.describe('Verify products create operations', () => {
       const response = await adminProductsRequest.post(productData);
       const responseBody = await response.json();
 
+      // Track for cleanup
+      createdProductIds.push(responseBody.id);
+
       expect(response.status()).toBe(expectedStatusCode);
       expect(responseBody.name).toBe(specialName);
-
-      // Cleanup
-      await adminProductsRequest.delete(responseBody.id);
     });
   });
 });
