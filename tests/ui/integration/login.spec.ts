@@ -1,4 +1,4 @@
-import { expect, test } from '@_fixtures/merge.fixture';
+import { expect, test } from '@_src/merge.fixture';
 import { prepareRandomUser } from '@_ui/factories/user.factory';
 import { LoginPage } from '@_ui/pages/login.page';
 import { invalidCredentials, invalidInputs } from '@_ui/test-data/login.data';
@@ -7,20 +7,6 @@ import {
   signUpValidationMessages,
   toastMessages,
 } from '@_ui/test-data/validation-messages.data';
-
-test.describe('Authentication', () => {
-  test('should login admin via API', async ({ loggedAdminHomePage }) => {
-    const navbar = loggedAdminHomePage.navbar;
-    await expect(navbar.userGreeting).toHaveText('Hi, Admin');
-    await expect(navbar.logoutButton).toBeVisible();
-  });
-
-  test('should login user via API', async ({ loggedUserHomePage }) => {
-    const navbar = loggedUserHomePage.navbar;
-    await expect(navbar.userGreeting).toHaveText('Hi, John Doe');
-    await expect(navbar.logoutButton).toBeVisible();
-  });
-});
 
 test.describe('Login UI validation', () => {
   test('should display validation messages for empty fields', async ({

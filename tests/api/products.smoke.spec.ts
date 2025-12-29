@@ -1,0 +1,48 @@
+import { expect, test } from '@_src/merge.fixture';
+
+test.describe('Products API endpoint', () => {
+  test('get products should return status code 200', async ({
+    productsRequest,
+  }) => {
+    const expectedResponseCode = 200;
+    const response = await productsRequest.get();
+
+    expect(response.status()).toBe(expectedResponseCode);
+  });
+
+  test('get products should return at least one product', async ({
+    productsRequest,
+  }) => {
+    const expectedMinProductCount = 1;
+    const response = await productsRequest.get();
+    const responseJson = await response.json();
+
+    expect(responseJson.products.length).toBeGreaterThanOrEqual(
+      expectedMinProductCount,
+    );
+  });
+
+  test('get products should return product object', async ({
+    productsRequest,
+  }) => {
+    const expectedRequiredFields = [
+      'id',
+      'name',
+      'description',
+      'price',
+      'category',
+      'image',
+      'stock',
+    ];
+
+    const response = await productsRequest.get();
+    const responseJson = await response.json();
+    const product = responseJson.products[0];
+
+    expect.soft(product.id).toBeDefined();
+
+    expectedRequiredFields.forEach((key) => {
+      expect.soft(product).toHaveProperty(key);
+    });
+  });
+});

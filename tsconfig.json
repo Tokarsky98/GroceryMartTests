@@ -5,6 +5,7 @@
     "strict": true,
     "baseUrl": ".",
     "paths": {
+      "@_src/*": ["src/*"],
       "@_api/*": ["src/api/*"],
       "@_ui/*": ["src/ui/*"],
       "@_fixtures/*": ["src/fixtures/*"],
