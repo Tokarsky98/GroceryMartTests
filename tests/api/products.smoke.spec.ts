@@ -1,7 +1,9 @@
 import { expect, test } from '@_src/merge.fixture';
 
 test.describe('Products API endpoint', () => {
-  test('get products returns status code 200', async ({ productsRequest }) => {
+  test('get products should return status code 200', async ({
+    productsRequest,
+  }) => {
     const expectedResponseCode = 200;
     const response = await productsRequest.get();
 
@@ -20,22 +22,27 @@ test.describe('Products API endpoint', () => {
     );
   });
 
-  // It worked, to be continued ...
+  test('get products should return product object', async ({
+    productsRequest,
+  }) => {
+    const expectedRequiredFields = [
+      'id',
+      'name',
+      'description',
+      'price',
+      'category',
+      'image',
+      'stock',
+    ];
 
-  //   test('post product with admin authentication should return 201', async ({
-  //     adminProductsRequest,
-  //   }) => {
-  //     const expectedStatusCode = 201;
+    const response = await productsRequest.get();
+    const responseJson = await response.json();
+    const product = responseJson.products[0];
 
-  //     const response = await adminProductsRequest.post({
-  //       name: 'Test Product',
-  //       description: 'This is a test product',
-  //       price: 9.99,
-  //       category: 'test-category',
-  //       image: 'http://example.com/image.jpg',
-  //       stock: 100,
-  //     });
+    expect.soft(product.id).toBeDefined();
 
-  //     expect(response.status()).toBe(expectedStatusCode);
-  //   });
+    expectedRequiredFields.forEach((key) => {
+      expect.soft(product).toHaveProperty(key);
+    });
+  });
 });
