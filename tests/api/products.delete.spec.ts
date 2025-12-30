@@ -1,3 +1,5 @@
+import { prepareRandomProduct } from '@_api/factories/product.factory';
+import { products } from '@_api/fixtures/manage-objects.fixture';
 import { expect, test } from '@_src/merge.fixture';
 
 test.describe('Verify products DELETE operations', () => {
@@ -51,5 +53,35 @@ test.describe('Verify products DELETE operations', () => {
     expect(responseGetNotDeleted.status()).toBe(
       expectedNotDeletedProductStatusCode,
     );
+  });
+
+  test.describe('Verify multiple products deletion with custom details', () => {
+    test.use({
+      products: async ({ adminProductsRequest }, use) => {
+        const product1 = prepareRandomProduct();
+        const product2 = prepareRandomProduct();
+        await products(adminProductsRequest, use, [product1, product2]);
+      },
+    });
+
+    test('should delete two products with admin authentication', async ({
+      products,
+      adminProductsRequest,
+    }) => {
+      const expectedStatusCode = 200;
+      const expectedDeletedStatusCode = 404;
+
+      expect(products).toHaveLength(2);
+
+      for (const product of products) {
+        const deleteResponse = await adminProductsRequest.delete(product.id);
+        expect(deleteResponse.status()).toBe(expectedStatusCode);
+      }
+
+      for (const product of products) {
+        const getDeleted = await adminProductsRequest.getOne(product.id);
+        expect(getDeleted.status()).toBe(expectedDeletedStatusCode);
+      }
+    });
   });
 });
