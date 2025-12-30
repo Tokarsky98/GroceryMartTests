@@ -7,8 +7,8 @@ interface DataFixtures {
 }
 
 export const dataFixtureTest = requestObjectTest.extend<DataFixtures>({
-  // Product fixture - creates and cleans up products automatically
+  // Product fixture (random by default, overridable)
   products: async ({ adminProductsRequest }, use) => {
-    await products(adminProductsRequest, [], use);
+    await products(adminProductsRequest, use);
   },
 });
