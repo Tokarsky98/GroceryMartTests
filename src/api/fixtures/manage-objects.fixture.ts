@@ -4,12 +4,22 @@ import { ProductsRequest } from '@_api/requests/products.request';
 import { ProductResponseModel } from '@_src/api/models/products-response.model';
 import { expect } from '@playwright/test';
 
+/**
+ * Creates one or more products for test usage and cleanup afterward
+ *
+ * By default, creates a single random product
+ * Can be overridden by providing `productDetails`
+ * Created products are passed to the test via `use`
+ * All products are deleted after the test completes
+ *
+ */
+
 export const products = async (
   adminProductsRequest: ProductsRequest,
-  productDetails: ProductsModel[],
   use: (r: ProductResponseModel[]) => Promise<void>,
+  productDetails: ProductsModel[] = [],
 ): Promise<void> => {
-  const result: ProductResponseModel[] = [];
+  const results: ProductResponseModel[] = [];
 
   const productsToCreate =
     productDetails.length > 0 ? productDetails : [prepareRandomProduct()];
@@ -21,12 +31,12 @@ export const products = async (
     const productJson = await createProductResponse.json();
     const productId = productJson.id;
 
-    result.push(new ProductResponseModel(productDetail, productId));
+    results.push(new ProductResponseModel(productDetail, productId));
   }
 
-  await use(result);
+  await use(results);
 
-  for (const obj of result) {
+  for (const obj of results) {
     const response = await adminProductsRequest.delete(obj.id);
     expect([200, 404]).toContain(response.status());
   }
