@@ -1,15 +1,15 @@
+import { createProducts } from '../../src/api/fixtures/manage-objects.fixture';
 import { prepareRandomProduct } from '@_api/factories/product.factory';
-import { products } from '@_api/fixtures/manage-objects.fixture';
 import { expect, test } from '@_src/merge.fixture';
 
 test.describe('Verify products DELETE operations', () => {
   test('should delete product with admin authentication', async ({
-    products,
+    product,
     adminProductsRequest,
   }) => {
     const expectedStatusCode = 200;
     const expectedDeletedProductStatusCode = 404;
-    const productId = products[0].id;
+    const productId = product.id;
 
     const responseProductDelete = await adminProductsRequest.delete(productId);
 
@@ -20,13 +20,13 @@ test.describe('Verify products DELETE operations', () => {
   });
 
   test('should not delete product with user authentication', async ({
-    products,
+    product,
     userProductsRequest,
     adminProductsRequest,
   }) => {
     const expectedStatusCode = 403;
     const expectedNotDeletedProductStatusCode = 200;
-    const productId = products[0].id;
+    const productId = product.id;
     const responseProductDelete = await userProductsRequest.delete(productId);
 
     expect(responseProductDelete.status()).toBe(expectedStatusCode);
@@ -40,13 +40,13 @@ test.describe('Verify products DELETE operations', () => {
   // Error found - product is deleted without authentication
   // eslint-disable-next-line playwright/no-skipped-test
   test.skip('should not delete product without authentication', async ({
-    products,
+    product,
     productsRequest,
     adminProductsRequest,
   }) => {
     const expectedStatusCode = 401;
     const expectedNotDeletedProductStatusCode = 200;
-    const productId = products[0].id;
+    const productId = product.id;
     const responseProductDelete = await productsRequest.delete(productId);
 
     expect(responseProductDelete.status()).toBe(expectedStatusCode);
@@ -62,7 +62,7 @@ test.describe('Verify products DELETE operations', () => {
       products: async ({ adminProductsRequest }, use) => {
         const product1 = prepareRandomProduct();
         const product2 = prepareRandomProduct();
-        await products(adminProductsRequest, use, [product1, product2]);
+        await createProducts(adminProductsRequest, use, [product1, product2]);
       },
     });
 
