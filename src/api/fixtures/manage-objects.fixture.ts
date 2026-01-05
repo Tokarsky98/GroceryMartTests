@@ -10,7 +10,7 @@ import { expect } from '@playwright/test';
  * By default, creates a single random product
  * Can be overridden by providing `productDetails`
  * Created products are passed to the test via `use`
- * All products are deleted after the test completes
+ * All products are deleted after the test completes (unless autoCleanup is false)
  *
  */
 
@@ -18,6 +18,7 @@ export const createProducts = async (
   adminProductsRequest: ProductsRequest,
   use: (r: ProductResponseModel[]) => Promise<void>,
   productDetails: ProductsModel[] = [],
+  autoCleanup: boolean = true,
 ): Promise<void> => {
   const results: ProductResponseModel[] = [];
 
@@ -36,8 +37,10 @@ export const createProducts = async (
 
   await use(results);
 
-  for (const obj of results) {
-    const response = await adminProductsRequest.delete(obj.id);
-    expect([200, 404]).toContain(response.status());
+  if (autoCleanup) {
+    for (const obj of results) {
+      const response = await adminProductsRequest.delete(obj.id);
+      expect([200, 404]).toContain(response.status());
+    }
   }
 };
