@@ -5,15 +5,12 @@ import { ProductResponseModel } from '@_api/models/products-response.model';
 interface DataFixtures {
   product: ProductResponseModel;
   products: ProductResponseModel[];
-  autoCleanup: boolean;
 }
 
 export const dataFixtureTest = requestObjectTest.extend<DataFixtures>({
-  autoCleanup: [true, { option: true }],
-
   // Product fixtures (random by default, overridable)
-  products: async ({ adminProductsRequest, autoCleanup }, use) => {
-    await createProducts(adminProductsRequest, use, [], autoCleanup);
+  products: async ({ adminProductsRequest }, use) => {
+    await createProducts(adminProductsRequest, use);
   },
   product: async ({ products }, use) => {
     await use(products[0]);

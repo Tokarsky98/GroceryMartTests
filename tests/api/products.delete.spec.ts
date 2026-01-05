@@ -3,22 +3,16 @@ import { prepareRandomProduct } from '@_api/factories/product.factory';
 import { expect, test } from '@_src/merge.fixture';
 
 test.describe('Verify products DELETE operations', () => {
-  test.describe('Delete with admin authentication (owns deletion)', () => {
-    test.use({ autoCleanup: false });
+  test('should delete product with admin authentication', async ({
+    product,
+    adminProductsRequest,
+  }) => {
+    const responseProductDelete = await adminProductsRequest.delete(product.id);
 
-    test('should delete product with admin authentication', async ({
-      product,
-      adminProductsRequest,
-    }) => {
-      const responseProductDelete = await adminProductsRequest.delete(
-        product.id,
-      );
+    expect(responseProductDelete.status()).toBe(200);
 
-      expect(responseProductDelete.status()).toBe(200);
-
-      const responseGetDeleted = await adminProductsRequest.getOne(product.id);
-      expect(responseGetDeleted.status()).toBe(404);
-    });
+    const responseGetDeleted = await adminProductsRequest.getOne(product.id);
+    expect(responseGetDeleted.status()).toBe(404);
   });
 
   test.describe('Authorization tests', () => {
