@@ -6,7 +6,6 @@ test.describe('Verify products PUT operations', () => {
     product,
     adminProductsRequest,
   }) => {
-    const expectedStatusCode = 200;
     const updatedProductData = prepareRandomProduct();
 
     const response = await adminProductsRequest.put(
@@ -15,7 +14,7 @@ test.describe('Verify products PUT operations', () => {
     );
     const responseBody = await response.json();
 
-    expect(response.status()).toBe(expectedStatusCode);
+    expect(response.status()).toBe(200);
     expect(responseBody.id).toBe(product.id);
     expect(responseBody.name).toBe(updatedProductData.name);
     expect(responseBody.description).toBe(updatedProductData.description);
@@ -27,7 +26,7 @@ test.describe('Verify products PUT operations', () => {
     const getUpdatedResponse = await adminProductsRequest.getOne(product.id);
     const getUpdatedBody = await getUpdatedResponse.json();
 
-    expect(getUpdatedResponse.status()).toBe(expectedStatusCode);
+    expect(getUpdatedResponse.status()).toBe(200);
     expect(getUpdatedBody.name).toBe(updatedProductData.name);
     expect(getUpdatedBody.description).toBe(updatedProductData.description);
   });
@@ -37,8 +36,6 @@ test.describe('Verify products PUT operations', () => {
     userProductsRequest,
     adminProductsRequest,
   }) => {
-    const expectedStatusCode = 403;
-    const expectedNotUpdatedStatusCode = 200;
     const updatedProductData = prepareRandomProduct();
 
     const response = await userProductsRequest.put(
@@ -46,12 +43,12 @@ test.describe('Verify products PUT operations', () => {
       product.id,
     );
 
-    expect(response.status()).toBe(expectedStatusCode);
+    expect(response.status()).toBe(403);
 
     const getNotUpdatedResponse = await adminProductsRequest.getOne(product.id);
     const getNotUpdatedBody = await getNotUpdatedResponse.json();
 
-    expect(getNotUpdatedResponse.status()).toBe(expectedNotUpdatedStatusCode);
+    expect(getNotUpdatedResponse.status()).toBe(200);
     expect(getNotUpdatedBody.name).toBe(product.name);
   });
 
@@ -60,25 +57,22 @@ test.describe('Verify products PUT operations', () => {
     productsRequest,
     adminProductsRequest,
   }) => {
-    const expectedStatusCode = 401;
-    const expectedNotUpdatedStatusCode = 200;
     const updatedProductData = prepareRandomProduct();
 
     const response = await productsRequest.put(updatedProductData, product.id);
 
-    expect(response.status()).toBe(expectedStatusCode);
+    expect(response.status()).toBe(401);
 
     const getNotUpdatedResponse = await adminProductsRequest.getOne(product.id);
     const getNotUpdatedBody = await getNotUpdatedResponse.json();
 
-    expect(getNotUpdatedResponse.status()).toBe(expectedNotUpdatedStatusCode);
+    expect(getNotUpdatedResponse.status()).toBe(200);
     expect(getNotUpdatedBody.name).toBe(product.name);
   });
 
   test('should not update non-existent product', async ({
     adminProductsRequest,
   }) => {
-    const expectedStatusCode = 404;
     const nonExistentProductId = 'non-existent-id-12345';
     const updatedProductData = prepareRandomProduct();
 
@@ -87,6 +81,6 @@ test.describe('Verify products PUT operations', () => {
       nonExistentProductId,
     );
 
-    expect(response.status()).toBe(expectedStatusCode);
+    expect(response.status()).toBe(404);
   });
 });

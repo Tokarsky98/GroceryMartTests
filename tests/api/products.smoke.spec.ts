@@ -4,10 +4,9 @@ test.describe('Products API endpoint', () => {
   test('get products should return status code 200', async ({
     productsRequest,
   }) => {
-    const expectedResponseCode = 200;
     const response = await productsRequest.get();
 
-    expect(response.status()).toBe(expectedResponseCode);
+    expect(response.status()).toBe(200);
   });
 
   test('get products should return at least one product', async ({
