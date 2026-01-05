@@ -34,7 +34,6 @@ test.describe('Verify products PUT operations', () => {
   test('should not update product with user authentication', async ({
     product,
     userProductsRequest,
-    adminProductsRequest,
   }) => {
     const updatedProductData = prepareRandomProduct();
 
@@ -45,7 +44,7 @@ test.describe('Verify products PUT operations', () => {
 
     expect(response.status()).toBe(403);
 
-    const getNotUpdatedResponse = await adminProductsRequest.getOne(product.id);
+    const getNotUpdatedResponse = await userProductsRequest.getOne(product.id);
     const getNotUpdatedBody = await getNotUpdatedResponse.json();
 
     expect(getNotUpdatedResponse.status()).toBe(200);
@@ -55,18 +54,16 @@ test.describe('Verify products PUT operations', () => {
   test('should not update product without authentication', async ({
     product,
     productsRequest,
-    adminProductsRequest,
   }) => {
     const updatedProductData = prepareRandomProduct();
 
     const response = await productsRequest.put(updatedProductData, product.id);
-
     expect(response.status()).toBe(401);
 
-    const getNotUpdatedResponse = await adminProductsRequest.getOne(product.id);
-    const getNotUpdatedBody = await getNotUpdatedResponse.json();
-
+    const getNotUpdatedResponse = await productsRequest.getOne(product.id);
     expect(getNotUpdatedResponse.status()).toBe(200);
+
+    const getNotUpdatedBody = await getNotUpdatedResponse.json();
     expect(getNotUpdatedBody.name).toBe(product.name);
   });
 

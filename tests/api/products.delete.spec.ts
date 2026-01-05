@@ -25,7 +25,6 @@ test.describe('Verify products DELETE operations', () => {
     test('should not delete product with user authentication', async ({
       product,
       userProductsRequest,
-      adminProductsRequest,
     }) => {
       const responseProductDelete = await userProductsRequest.delete(
         product.id,
@@ -33,7 +32,7 @@ test.describe('Verify products DELETE operations', () => {
 
       expect(responseProductDelete.status()).toBe(403);
 
-      const responseGetNotDeleted = await adminProductsRequest.getOne(
+      const responseGetNotDeleted = await userProductsRequest.getOne(
         product.id,
       );
       expect(responseGetNotDeleted.status()).toBe(200);
@@ -44,15 +43,12 @@ test.describe('Verify products DELETE operations', () => {
     test.skip('should not delete product without authentication', async ({
       product,
       productsRequest,
-      adminProductsRequest,
     }) => {
       const responseProductDelete = await productsRequest.delete(product.id);
 
       expect(responseProductDelete.status()).toBe(401);
 
-      const responseGetNotDeleted = await adminProductsRequest.getOne(
-        product.id,
-      );
+      const responseGetNotDeleted = await productsRequest.getOne(product.id);
       expect(responseGetNotDeleted.status()).toBe(200);
     });
   });
