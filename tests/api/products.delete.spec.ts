@@ -32,9 +32,7 @@ test.describe('Verify products DELETE operations', () => {
       expect(responseGetNotDeleted.status()).toBe(200);
     });
 
-    // Error found - product is deleted without authentication
-    // eslint-disable-next-line playwright/no-skipped-test
-    test.skip('should not delete product without authentication', async ({
+    test('should not delete product without authentication', async ({
       product,
       productsRequest,
     }) => {
