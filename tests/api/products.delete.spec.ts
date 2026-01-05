@@ -1,60 +1,48 @@
+import { createProducts } from '../../src/api/fixtures/manage-objects.fixture';
 import { prepareRandomProduct } from '@_api/factories/product.factory';
-import { products } from '@_api/fixtures/manage-objects.fixture';
 import { expect, test } from '@_src/merge.fixture';
 
 test.describe('Verify products DELETE operations', () => {
   test('should delete product with admin authentication', async ({
-    products,
+    product,
     adminProductsRequest,
   }) => {
-    const expectedStatusCode = 200;
-    const expectedDeletedProductStatusCode = 404;
-    const productId = products[0].id;
+    const responseProductDelete = await adminProductsRequest.delete(product.id);
 
-    const responseProductDelete = await adminProductsRequest.delete(productId);
+    expect(responseProductDelete.status()).toBe(200);
 
-    expect(responseProductDelete.status()).toBe(expectedStatusCode);
-
-    const responseGetDeleted = await adminProductsRequest.getOne(productId);
-    expect(responseGetDeleted.status()).toBe(expectedDeletedProductStatusCode);
+    const responseGetDeleted = await adminProductsRequest.getOne(product.id);
+    expect(responseGetDeleted.status()).toBe(404);
   });
 
-  test('should not delete product with user authentication', async ({
-    products,
-    userProductsRequest,
-    adminProductsRequest,
-  }) => {
-    const expectedStatusCode = 403;
-    const expectedNotDeletedProductStatusCode = 200;
-    const productId = products[0].id;
-    const responseProductDelete = await userProductsRequest.delete(productId);
+  test.describe('Authorization tests', () => {
+    test('should not delete product with user authentication', async ({
+      product,
+      userProductsRequest,
+    }) => {
+      const responseProductDelete = await userProductsRequest.delete(
+        product.id,
+      );
 
-    expect(responseProductDelete.status()).toBe(expectedStatusCode);
+      expect(responseProductDelete.status()).toBe(403);
 
-    const responseGetNotDeleted = await adminProductsRequest.getOne(productId);
-    expect(responseGetNotDeleted.status()).toBe(
-      expectedNotDeletedProductStatusCode,
-    );
-  });
+      const responseGetNotDeleted = await userProductsRequest.getOne(
+        product.id,
+      );
+      expect(responseGetNotDeleted.status()).toBe(200);
+    });
 
-  // Error found - product is deleted without authentication
-  // eslint-disable-next-line playwright/no-skipped-test
-  test.skip('should not delete product without authentication', async ({
-    products,
-    productsRequest,
-    adminProductsRequest,
-  }) => {
-    const expectedStatusCode = 401;
-    const expectedNotDeletedProductStatusCode = 200;
-    const productId = products[0].id;
-    const responseProductDelete = await productsRequest.delete(productId);
+    test('should not delete product without authentication', async ({
+      product,
+      productsRequest,
+    }) => {
+      const responseProductDelete = await productsRequest.delete(product.id);
 
-    expect(responseProductDelete.status()).toBe(expectedStatusCode);
+      expect(responseProductDelete.status()).toBe(401);
 
-    const responseGetNotDeleted = await adminProductsRequest.getOne(productId);
-    expect(responseGetNotDeleted.status()).toBe(
-      expectedNotDeletedProductStatusCode,
-    );
+      const responseGetNotDeleted = await productsRequest.getOne(product.id);
+      expect(responseGetNotDeleted.status()).toBe(200);
+    });
   });
 
   test.describe('Verify multiple products deletion with custom details', () => {
@@ -62,7 +50,7 @@ test.describe('Verify products DELETE operations', () => {
       products: async ({ adminProductsRequest }, use) => {
         const product1 = prepareRandomProduct();
         const product2 = prepareRandomProduct();
-        await products(adminProductsRequest, use, [product1, product2]);
+        await createProducts(adminProductsRequest, use, [product1, product2]);
       },
     });
 
@@ -70,19 +58,16 @@ test.describe('Verify products DELETE operations', () => {
       products,
       adminProductsRequest,
     }) => {
-      const expectedStatusCode = 200;
-      const expectedDeletedStatusCode = 404;
-
       expect(products).toHaveLength(2);
 
       for (const product of products) {
         const deleteResponse = await adminProductsRequest.delete(product.id);
-        expect(deleteResponse.status()).toBe(expectedStatusCode);
+        expect(deleteResponse.status()).toBe(200);
       }
 
       for (const product of products) {
         const getDeleted = await adminProductsRequest.getOne(product.id);
-        expect(getDeleted.status()).toBe(expectedDeletedStatusCode);
+        expect(getDeleted.status()).toBe(404);
       }
     });
   });

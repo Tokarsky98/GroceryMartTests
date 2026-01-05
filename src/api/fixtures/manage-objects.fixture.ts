@@ -14,7 +14,7 @@ import { expect } from '@playwright/test';
  *
  */
 
-export const products = async (
+export const createProducts = async (
   adminProductsRequest: ProductsRequest,
   use: (r: ProductResponseModel[]) => Promise<void>,
   productDetails: ProductsModel[] = [],

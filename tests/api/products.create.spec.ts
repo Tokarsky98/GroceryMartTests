@@ -20,7 +20,6 @@ test.describe('Verify products create operations', () => {
       adminProductsRequest,
     }) => {
       const productData = prepareRandomProduct();
-      const expectedStatusCode = 201;
 
       const response = await adminProductsRequest.post(productData);
       const responseBody = await response.json();
@@ -28,7 +27,7 @@ test.describe('Verify products create operations', () => {
       // Track for cleanup
       createdProductIds.push(responseBody.id);
 
-      expect(response.status()).toBe(expectedStatusCode);
+      expect(response.status()).toBe(201);
       expect(responseBody).toHaveProperty('id');
       expect(responseBody.name).toBe(productData.name);
       expect(responseBody.description).toBe(productData.description);
@@ -42,20 +41,18 @@ test.describe('Verify products create operations', () => {
       userProductsRequest,
     }) => {
       const productData = prepareRandomProduct();
-      const expectedStatusCode = 403;
 
       const response = await userProductsRequest.post(productData);
-      expect(response.status()).toBe(expectedStatusCode);
+      expect(response.status()).toBe(403);
     });
 
     test('should not create product without authentication', async ({
       productsRequest,
     }) => {
       const productData = prepareRandomProduct();
-      const expectedStatusCode = 401;
 
       const response = await productsRequest.post(productData);
-      expect(response.status()).toBe(expectedStatusCode);
+      expect(response.status()).toBe(401);
     });
   });
 
@@ -66,11 +63,10 @@ test.describe('Verify products create operations', () => {
       adminProductsRequest,
     }) => {
       const productData = prepareCustomProduct('price', 'invalid-price');
-      const expectedStatusCode = 400;
 
       const response = await adminProductsRequest.post(productData);
 
-      expect(response.status()).toBe(expectedStatusCode);
+      expect(response.status()).toBe(400);
     });
 
     // Error found - product is created even with negative price
@@ -79,11 +75,10 @@ test.describe('Verify products create operations', () => {
       adminProductsRequest,
     }) => {
       const productData = prepareCustomProduct('price', -10);
-      const expectedStatusCode = 400;
 
       const response = await adminProductsRequest.post(productData);
 
-      expect(response.status()).toBe(expectedStatusCode);
+      expect(response.status()).toBe(400);
     });
   });
 
@@ -94,7 +89,6 @@ test.describe('Verify products create operations', () => {
       adminProductsRequest,
     }) => {
       const productData = prepareRandomProduct();
-      const expectedStatusCode = 409;
 
       // Create first product
       const firstResponse = await adminProductsRequest.post(productData);
@@ -106,14 +100,13 @@ test.describe('Verify products create operations', () => {
 
       // Try to create duplicate
       const duplicateResponse = await adminProductsRequest.post(productData);
-      expect(duplicateResponse.status()).toBe(expectedStatusCode);
+      expect(duplicateResponse.status()).toBe(409);
     });
 
     test('should create product with zero stock', async ({
       adminProductsRequest,
     }) => {
       const productData = prepareCustomProduct('stock', 0);
-      const expectedStatusCode = 201;
 
       const response = await adminProductsRequest.post(productData);
       const responseBody = await response.json();
@@ -121,7 +114,7 @@ test.describe('Verify products create operations', () => {
       // Track for cleanup
       createdProductIds.push(responseBody.id);
 
-      expect(response.status()).toBe(expectedStatusCode);
+      expect(response.status()).toBe(201);
       expect(responseBody.stock).toBe(0);
     });
 
@@ -130,7 +123,6 @@ test.describe('Verify products create operations', () => {
     }) => {
       const specialName = 'Product @#$% & *()';
       const productData = prepareCustomProduct('name', specialName);
-      const expectedStatusCode = 201;
 
       const response = await adminProductsRequest.post(productData);
       const responseBody = await response.json();
@@ -138,7 +130,7 @@ test.describe('Verify products create operations', () => {
       // Track for cleanup
       createdProductIds.push(responseBody.id);
 
-      expect(response.status()).toBe(expectedStatusCode);
+      expect(response.status()).toBe(201);
       expect(responseBody.name).toBe(specialName);
     });
   });
