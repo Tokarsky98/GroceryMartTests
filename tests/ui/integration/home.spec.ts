@@ -3,7 +3,7 @@ import { HomePage } from '@_ui/pages/home.page';
 import { products } from '@_ui/test-data/products.data';
 
 test.describe('Home Page - Products', () => {
-  test('should get product by name and validate its details', async ({
+  test('should get product by name and validate its details @ui @anonymous @integration', async ({
     page,
   }) => {
     const homePage = new HomePage(page);
@@ -21,14 +21,14 @@ test.describe('Home Page - Products', () => {
     await expect(pastaProduct.addToCartButton).toBeVisible();
   });
 
-  test('should count all products on the page', async ({ page }) => {
+  test('should count all products on the page @ui @anonymous @integration', async ({ page }) => {
     const homePage = new HomePage(page);
     await homePage.goto();
 
     await expect(homePage.productCards).toHaveCount(12);
   });
 
-  test('should get multiple products by name', async ({ page }) => {
+  test('should get multiple products by name @ui @anonymous @integration', async ({ page }) => {
     const homePage = new HomePage(page);
     await homePage.goto();
 

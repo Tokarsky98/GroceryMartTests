@@ -6,19 +6,23 @@ import { defaultUsers } from '@_ui/test-data/login.data';
 import { toastMessages } from '@_ui/test-data/validation-messages.data';
 
 test.describe('Authentication', () => {
-  test('should login admin via API', async ({ adminHomePage }) => {
+  test('should login admin via API @ui @admin @e2e', async ({
+    adminHomePage,
+  }) => {
     const navbar = adminHomePage.navbar;
     await expect(navbar.userGreeting).toHaveText('Hi, Admin');
     await expect(navbar.logoutButton).toBeVisible();
   });
 
-  test('should login user via API', async ({ userHomePage }) => {
+  test('should login user via API @ui @user @e2e', async ({ userHomePage }) => {
     const navbar = userHomePage.navbar;
     await expect(navbar.userGreeting).toHaveText('Hi, John Doe');
     await expect(navbar.logoutButton).toBeVisible();
   });
 
-  test('should login admin via form with credentials', async ({ page }) => {
+  test('should login admin via form with credentials @ui @anonymous @e2e', async ({
+    page,
+  }) => {
     const loginPage = new LoginPage(page);
     await loginPage.goto();
 
@@ -33,7 +37,9 @@ test.describe('Authentication', () => {
     await expect(navbar.logoutButton).toBeVisible();
   });
 
-  test('should login user via form with credentials', async ({ page }) => {
+  test('should login user via form with credentials @ui @anonymous @e2e', async ({
+    page,
+  }) => {
     const loginPage = new LoginPage(page);
     await loginPage.goto();
 
@@ -48,7 +54,7 @@ test.describe('Authentication', () => {
     await expect(navbar.logoutButton).toBeVisible();
   });
 
-  test('should not display user greeting when not authenticated', async ({
+  test('should not display user greeting when not authenticated @ui @anonymous @e2e', async ({
     page,
   }) => {
     const homePage = new HomePage(page);
@@ -61,7 +67,7 @@ test.describe('Authentication', () => {
 });
 
 test.describe('User Registration and Login Flow', () => {
-  test('should register new user and login with credentials', async ({
+  test('should register new user and login with credentials @ui @anonymous @e2e', async ({
     page,
   }) => {
     const signUpUserData = prepareRandomUser();
