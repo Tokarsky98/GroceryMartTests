@@ -21,14 +21,18 @@ test.describe('Home Page - Products', () => {
     await expect(pastaProduct.addToCartButton).toBeVisible();
   });
 
-  test('should count all products on the page @ui @anonymous @integration', async ({ page }) => {
+  test('should count all products on the page @ui @anonymous @integration', async ({
+    page,
+  }) => {
     const homePage = new HomePage(page);
     await homePage.goto();
 
     await expect(homePage.productCards).toHaveCount(12);
   });
 
-  test('should get multiple products by name @ui @anonymous @integration', async ({ page }) => {
+  test('should get multiple products by name @ui @anonymous @integration', async ({
+    page,
+  }) => {
     const homePage = new HomePage(page);
     await homePage.goto();
 
