@@ -3,7 +3,7 @@ import { prepareRandomProduct } from '@_api/factories/product.factory';
 import { expect, test } from '@_src/merge.fixture';
 
 test.describe('Verify products DELETE operations', () => {
-  test('should delete product with admin authentication', async ({
+  test('should delete product with admin authentication @api @admin', async ({
     product,
     adminProductsRequest,
   }) => {
@@ -16,7 +16,7 @@ test.describe('Verify products DELETE operations', () => {
   });
 
   test.describe('Authorization tests', () => {
-    test('should not delete product with user authentication', async ({
+    test('should not delete product with user authentication @api @user', async ({
       product,
       userProductsRequest,
     }) => {
@@ -32,7 +32,7 @@ test.describe('Verify products DELETE operations', () => {
       expect(responseGetNotDeleted.status()).toBe(200);
     });
 
-    test('should not delete product without authentication', async ({
+    test('should not delete product without authentication @api @anonymous', async ({
       product,
       productsRequest,
     }) => {
@@ -54,7 +54,7 @@ test.describe('Verify products DELETE operations', () => {
       },
     });
 
-    test('should delete two products with admin authentication', async ({
+    test('should delete two products with admin authentication @api @admin', async ({
       products,
       adminProductsRequest,
     }) => {

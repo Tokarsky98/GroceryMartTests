@@ -30,6 +30,7 @@ The repository reflects practical knowledge from real-world projects using Playw
 - [Installation and Setup](#installation-and-setup)
 - [Environment Variables](#environment-variables)
 - [Running the Tests](#running-the-tests)
+- [Test Tags](#test-tags)
 - [Reporting](#reporting)
 - [Troubleshooting](#troubleshooting)
 
@@ -102,6 +103,46 @@ npm run test -- -g "test-title"
 
 For more commands and options, see the `scripts` section in
 `package.json`.
+
+## Test Tags
+
+All tests are organized with a unified tagging system for flexible test execution.
+
+### Tag Categories
+
+1. **Test Type:**
+   - `@api` - API tests
+   - `@ui` - UI tests
+
+2. **Authentication Level:**
+   - `@admin` - Tests using admin authentication
+   - `@user` - Tests using regular user authentication
+   - `@anonymous` - Tests without authentication
+
+3. **Test Category:**
+   - `@smoke` - Critical smoke tests
+   - `@e2e` - End-to-end tests
+   - `@integration` - Integration tests
+
+### Examples of Running Tests with Tags
+
+Run all API tests:
+
+```bash
+npm run test -- --grep @api
+```
+
+Run API admin tests (combining tags):
+
+```bash
+npm run test -- --grep "@api.*@admin"
+```
+
+Exclude integration tests (inverting tags):
+
+```bash
+npm run test -- --grep-invert "@integration"
+```
 
 ## Reporting
 

@@ -2,7 +2,7 @@ import { prepareRandomProduct } from '@_api/factories/product.factory';
 import { expect, test } from '@_src/merge.fixture';
 
 test.describe('Verify products PUT operations', () => {
-  test('should update product with admin authentication', async ({
+  test('should update product with admin authentication @api @admin', async ({
     product,
     adminProductsRequest,
   }) => {
@@ -31,7 +31,7 @@ test.describe('Verify products PUT operations', () => {
     expect(getUpdatedBody.description).toBe(updatedProductData.description);
   });
 
-  test('should not update product with user authentication', async ({
+  test('should not update product with user authentication @api @user', async ({
     product,
     userProductsRequest,
   }) => {
@@ -51,7 +51,7 @@ test.describe('Verify products PUT operations', () => {
     expect(getNotUpdatedBody.name).toBe(product.name);
   });
 
-  test('should not update product without authentication', async ({
+  test('should not update product without authentication @api @anonymous', async ({
     product,
     productsRequest,
   }) => {
@@ -67,7 +67,7 @@ test.describe('Verify products PUT operations', () => {
     expect(getNotUpdatedBody.name).toBe(product.name);
   });
 
-  test('should not update non-existent product', async ({
+  test('should not update non-existent product @api @admin', async ({
     adminProductsRequest,
   }) => {
     const nonExistentProductId = 'non-existent-id-12345';

@@ -16,7 +16,7 @@ test.describe('Verify products create operations', () => {
   });
 
   test.describe('Authentication and Authorization', () => {
-    test('should create product with admin authentication', async ({
+    test('should create product with admin authentication @api @admin', async ({
       adminProductsRequest,
     }) => {
       const productData = prepareRandomProduct();
@@ -37,7 +37,7 @@ test.describe('Verify products create operations', () => {
       expect(responseBody.image).toBe(productData.image);
     });
 
-    test('should not create product with user authentication', async ({
+    test('should not create product with user authentication @api @user', async ({
       userProductsRequest,
     }) => {
       const productData = prepareRandomProduct();
@@ -46,7 +46,7 @@ test.describe('Verify products create operations', () => {
       expect(response.status()).toBe(403);
     });
 
-    test('should not create product without authentication', async ({
+    test('should not create product without authentication @api @anonymous', async ({
       productsRequest,
     }) => {
       const productData = prepareRandomProduct();
@@ -59,7 +59,7 @@ test.describe('Verify products create operations', () => {
   test.describe('Validation - Invalid Data Types', () => {
     // Error found - product is created with string type
     // eslint-disable-next-line playwright/no-skipped-test
-    test.skip('should not create product with invalid price type', async ({
+    test.skip('should not create product with invalid price type @api @admin', async ({
       adminProductsRequest,
     }) => {
       const productData = prepareCustomProduct('price', 'invalid-price');
@@ -71,7 +71,7 @@ test.describe('Verify products create operations', () => {
 
     // Error found - product is created even with negative price
     // eslint-disable-next-line playwright/no-skipped-test
-    test.skip('should not create product with negative price', async ({
+    test.skip('should not create product with negative price @api @admin', async ({
       adminProductsRequest,
     }) => {
       const productData = prepareCustomProduct('price', -10);
@@ -85,7 +85,7 @@ test.describe('Verify products create operations', () => {
   test.describe('Edge Cases', () => {
     // Error found - duplicate products are created
     // eslint-disable-next-line playwright/no-skipped-test
-    test.skip('should not create duplicate product with same name', async ({
+    test.skip('should not create duplicate product with same name @api @admin', async ({
       adminProductsRequest,
     }) => {
       const productData = prepareRandomProduct();
@@ -103,7 +103,7 @@ test.describe('Verify products create operations', () => {
       expect(duplicateResponse.status()).toBe(409);
     });
 
-    test('should create product with zero stock', async ({
+    test('should create product with zero stock @api @admin', async ({
       adminProductsRequest,
     }) => {
       const productData = prepareCustomProduct('stock', 0);
@@ -118,7 +118,7 @@ test.describe('Verify products create operations', () => {
       expect(responseBody.stock).toBe(0);
     });
 
-    test('should create product with special characters in name', async ({
+    test('should create product with special characters in name @api @admin', async ({
       adminProductsRequest,
     }) => {
       const specialName = 'Product @#$% & *()';
