@@ -6,9 +6,11 @@ on:
   pull_request:
     branches: [main, master]
   workflow_dispatch:
-  # schedule:
-  #     - cron: '5 6 * * 1-5'
-
+    inputs:
+      grep:
+        description: 'Playwright grep'
+        required: false
+        default: '@ui|@api'
 concurrency:
   group: playwright-tests-${{ github.ref }}
   cancel-in-progress: true
@@ -17,6 +19,17 @@ permissions:
   contents: read
   checks: write
   id-token: write
+
+env:
+  # For manual runs (workflow_dispatch), the value comes from the 'grep' input field
+  # e.g. @ui.*@admin - runs UI tests with admin role
+  # For push and pull_request events, all UI and API tests are executed
+  PLAYWRIGHT_GREP: >
+    ${{
+      github.event_name == 'workflow_dispatch'
+        && inputs.grep
+        || '@ui|@api'
+    }}
 
 jobs:
   tests:
@@ -108,7 +121,9 @@ jobs:
           ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
           USER_EMAIL: ${{ secrets.USER_EMAIL }}
           USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
-        run: npm run test -- --retries=1
+        run: |
+          echo "Running Playwright tests with grep: $PLAYWRIGHT_GREP"
+          npm run test -- --grep "$PLAYWRIGHT_GREP" --retries=1
 
       # Upload results
       - name: Upload test results
