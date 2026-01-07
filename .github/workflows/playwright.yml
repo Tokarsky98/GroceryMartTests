@@ -121,9 +121,7 @@ jobs:
           ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
           USER_EMAIL: ${{ secrets.USER_EMAIL }}
           USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
-        run: |
-          echo "Running Playwright tests with grep: $PLAYWRIGHT_GREP"
-          npx playwright test --grep "$PLAYWRIGHT_GREP" --retries=1
+        run: npx playwright test --grep "${{ env.PLAYWRIGHT_GREP }}" --retries=1
 
       # Upload results
       - name: Upload test results
