@@ -116,11 +116,11 @@ All tests are organized with a unified tagging system for flexible test executio
 
 2. **Authentication Level:**
    - `@admin` - Tests using admin authentication
-   - `@user` - Tests using regular user authentication
+   - `@user` - Tests using user authentication
    - `@anonymous` - Tests without authentication
 
 3. **Test Category:**
-   - `@smoke` - Critical smoke tests
+   - `@smoke` - Smoke tests
    - `@e2e` - End-to-end tests
    - `@integration` - Integration tests
 
@@ -129,7 +129,7 @@ All tests are organized with a unified tagging system for flexible test executio
 Run all API tests:
 
 ```bash
-npm run test -- --grep @api
+npm run test -- --grep "@api"
 ```
 
 Run API admin tests (combining tags):
