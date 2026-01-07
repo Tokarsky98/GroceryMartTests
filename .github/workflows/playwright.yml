@@ -10,7 +10,7 @@ on:
       grep:
         description: 'Playwright grep'
         required: false
-        default: '@ui|@api'
+        default: '(@ui)|(@api)'
 concurrency:
   group: playwright-tests-${{ github.ref }}
   cancel-in-progress: true
@@ -28,7 +28,7 @@ env:
     ${{
       github.event_name == 'workflow_dispatch'
         && inputs.grep
-        || '@ui|@api'
+        || '(@ui)|(@api)'
     }}
 
 jobs:
