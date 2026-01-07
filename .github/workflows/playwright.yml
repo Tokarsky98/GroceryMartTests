@@ -103,7 +103,7 @@ jobs:
       - name: Install frontend dependencies
         if: steps.cache-frontend.outputs.cache-hit != 'true'
         working-directory: app/frontend
-        run: npm ci
+        run: npm install
 
       # Start application servers
       - name: Start backend and frontend
