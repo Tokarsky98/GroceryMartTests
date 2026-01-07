@@ -79,13 +79,13 @@ jobs:
         id: cache-backend
         with:
           path: app/backend/node_modules
-          key: modules-backend-${{ hashFiles('app/backend/package.json') }}
+          key: modules-backend-${{ hashFiles('app/backend/package-lock.json') }}
       - name: Cache frontend dependencies
         uses: actions/cache@v4
         id: cache-frontend
         with:
           path: app/frontend/node_modules
-          key: modules-frontend-${{ hashFiles('app/frontend/package.json') }}
+          key: modules-frontend-${{ hashFiles('app/frontend/package-lock.json') }}
 
       # Install dependencies
       - name: Install test dependencies
@@ -99,11 +99,11 @@ jobs:
       - name: Install backend dependencies
         if: steps.cache-backend.outputs.cache-hit != 'true'
         working-directory: app/backend
-        run: npm install
+        run: npm ci
       - name: Install frontend dependencies
         if: steps.cache-frontend.outputs.cache-hit != 'true'
         working-directory: app/frontend
-        run: npm install
+        run: npm ci
 
       # Start application servers
       - name: Start backend and frontend
