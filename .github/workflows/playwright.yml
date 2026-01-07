@@ -6,9 +6,11 @@ on:
   pull_request:
     branches: [main, master]
   workflow_dispatch:
-  # schedule:
-  #     - cron: '5 6 * * 1-5'
-
+    inputs:
+      grep:
+        description: 'Playwright grep'
+        required: false
+        default: '@ui|@api'
 concurrency:
   group: playwright-tests-${{ github.ref }}
   cancel-in-progress: true
@@ -17,6 +19,17 @@ permissions:
   contents: read
   checks: write
   id-token: write
+
+env:
+  # For manual runs (workflow_dispatch), the value comes from the 'grep' input field
+  # e.g. @ui.*@admin - runs UI tests with admin role
+  # For push and pull_request events, all UI and API tests are executed
+  PLAYWRIGHT_GREP: >-
+    ${{
+      github.event_name == 'workflow_dispatch'
+        && inputs.grep
+        || '@ui|@api'
+    }}
 
 jobs:
   tests:
@@ -66,13 +79,13 @@ jobs:
         id: cache-backend
         with:
           path: app/backend/node_modules
-          key: modules-backend-${{ hashFiles('app/backend/package.json') }}
+          key: modules-backend-${{ hashFiles('app/backend/package-lock.json') }}
       - name: Cache frontend dependencies
         uses: actions/cache@v4
         id: cache-frontend
         with:
           path: app/frontend/node_modules
-          key: modules-frontend-${{ hashFiles('app/frontend/package.json') }}
+          key: modules-frontend-${{ hashFiles('app/frontend/package-lock.json') }}
 
       # Install dependencies
       - name: Install test dependencies
@@ -86,7 +99,7 @@ jobs:
       - name: Install backend dependencies
         if: steps.cache-backend.outputs.cache-hit != 'true'
         working-directory: app/backend
-        run: npm install
+        run: npm ci
       - name: Install frontend dependencies
         if: steps.cache-frontend.outputs.cache-hit != 'true'
         working-directory: app/frontend
@@ -108,7 +121,7 @@ jobs:
           ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
           USER_EMAIL: ${{ secrets.USER_EMAIL }}
           USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
-        run: npm run test -- --retries=1
+        run: npx playwright test --grep "${{ env.PLAYWRIGHT_GREP }}" --retries=1
 
       # Upload results
       - name: Upload test results
