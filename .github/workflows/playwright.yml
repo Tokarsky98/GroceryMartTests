@@ -24,7 +24,7 @@ env:
   # For manual runs (workflow_dispatch), the value comes from the 'grep' input field
   # e.g. @ui.*@admin - runs UI tests with admin role
   # For push and pull_request events, all UI and API tests are executed
-  PLAYWRIGHT_GREP: >
+  PLAYWRIGHT_GREP: >-
     ${{
       github.event_name == 'workflow_dispatch'
         && inputs.grep
