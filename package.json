@@ -9,11 +9,11 @@
     "tsc": "tsc --noEmit",
     "test": "npx playwright test",
     "test:ui-mode": "npm run test -- --ui",
-    "test:ui": "playwright test --grep @ui",
-    "test:api": "playwright test --grep @api",
-    "test:e2e": "playwright test --grep @e2e",
-    "test:smoke": "playwright test --grep @smoke",
-    "test:integration": "playwright test --grep @integration"
+    "test:ui": "npm run test -- --grep @ui",
+    "test:api": "npm run test -- --grep @api",
+    "test:e2e": "npm run test -- --grep @e2e",
+    "test:smoke": "npm run test -- --grep @smoke",
+    "test:integration": "npm run test -- --grep @integration"
   },
   "keywords": [],
   "author": "",
