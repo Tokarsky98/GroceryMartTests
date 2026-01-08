@@ -51,7 +51,7 @@ test.describe('Verify products PUT operations', () => {
     expect(getNotUpdatedBody.name).toBe(product.name);
   });
 
-  test('should not update product without authentication @api @anonymous', async ({
+  test('should not update product without authentication @api @guest', async ({
     product,
     productsRequest,
   }) => {

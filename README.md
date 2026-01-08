@@ -117,7 +117,7 @@ All tests are organized with a unified tagging system for flexible test executio
 2. **Authentication Level:**
    - `@admin` - Tests using admin authentication
    - `@user` - Tests using user authentication
-   - `@anonymous` - Tests without authentication
+   - `@guest` - Tests without authentication
 
 3. **Test Category:**
    - `@smoke` - Smoke tests

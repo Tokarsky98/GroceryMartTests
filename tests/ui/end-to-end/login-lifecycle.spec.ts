@@ -1,8 +1,8 @@
 import { expect, test } from '@_src/merge.fixture';
+import { defaultUsers } from '@_src/ui/test-data/users.data';
 import { prepareRandomUser } from '@_ui/factories/user.factory';
 import { HomePage } from '@_ui/pages/home.page';
 import { LoginPage } from '@_ui/pages/login.page';
-import { defaultUsers } from '@_ui/test-data/login.data';
 import { toastMessages } from '@_ui/test-data/validation-messages.data';
 
 test.describe('Authentication', () => {
@@ -20,7 +20,7 @@ test.describe('Authentication', () => {
     await expect(navbar.logoutButton).toBeVisible();
   });
 
-  test('should login admin via form with credentials @ui @anonymous @e2e', async ({
+  test('should login admin via form with credentials @ui @guest @e2e', async ({
     page,
   }) => {
     const loginPage = new LoginPage(page);
@@ -37,7 +37,7 @@ test.describe('Authentication', () => {
     await expect(navbar.logoutButton).toBeVisible();
   });
 
-  test('should login user via form with credentials @ui @anonymous @e2e', async ({
+  test('should login user via form with credentials @ui @guest @e2e', async ({
     page,
   }) => {
     const loginPage = new LoginPage(page);
@@ -54,7 +54,7 @@ test.describe('Authentication', () => {
     await expect(navbar.logoutButton).toBeVisible();
   });
 
-  test('should not display user greeting when not authenticated @ui @anonymous @e2e', async ({
+  test('should not display user greeting when not authenticated @ui @guest @e2e', async ({
     page,
   }) => {
     const homePage = new HomePage(page);
@@ -67,7 +67,7 @@ test.describe('Authentication', () => {
 });
 
 test.describe('User Registration and Login Flow', () => {
-  test('should register new user and login with credentials @ui @anonymous @e2e', async ({
+  test('should register new user and login with credentials @ui @guest @e2e', async ({
     page,
   }) => {
     const signUpUserData = prepareRandomUser();
