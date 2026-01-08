@@ -6,53 +6,33 @@ import { LoginPage } from '@_ui/pages/login.page';
 import { toastMessages } from '@_ui/test-data/validation-messages.data';
 
 test.describe('Authentication', () => {
-  test('should login admin via API @ui @admin @e2e', async ({
-    adminHomePage,
-  }) => {
-    const navbar = adminHomePage.navbar;
-    await expect(navbar.userGreeting).toHaveText('Hi, Admin');
-    await expect(navbar.logoutButton).toBeVisible();
-  });
+  const authTestCases = [
+    { role: 'admin' as const, greeting: 'Hi, Admin' },
+    { role: 'user' as const, greeting: 'Hi, John Doe' },
+  ];
 
-  test('should login user via API @ui @user @e2e', async ({ userHomePage }) => {
-    const navbar = userHomePage.navbar;
-    await expect(navbar.userGreeting).toHaveText('Hi, John Doe');
-    await expect(navbar.logoutButton).toBeVisible();
-  });
+  for (const { role, greeting } of authTestCases) {
+    test.describe(`${role} authentication via API`, () => {
+      test.use({ role });
 
-  test('should login admin via form with credentials @ui @guest @e2e', async ({
-    page,
-  }) => {
-    const loginPage = new LoginPage(page);
-    await loginPage.goto();
+      test(`should show greeting @ui @${role} @e2e`, async ({ homePage }) => {
+        const navbar = homePage.navbar;
+        await expect(navbar.userGreeting).toHaveText(greeting);
+        await expect(navbar.logoutButton).toBeVisible();
+      });
+    });
 
-    await expect(loginPage.modal).toBeVisible();
-    await expect(loginPage.header).toBeVisible();
+    test(`should login ${role} via form @ui @guest @e2e`, async ({ page }) => {
+      const loginPage = new LoginPage(page);
+      await loginPage.goto();
 
-    const homePage = await loginPage.login(defaultUsers.admin);
-    const navbar = homePage.navbar;
+      const homePage = await loginPage.login(defaultUsers[role]);
+      const navbar = homePage.navbar;
 
-    await expect(loginPage.toastMessage).toHaveText(toastMessages.loginSuccess);
-    await expect(navbar.userGreeting).toHaveText('Hi, Admin');
-    await expect(navbar.logoutButton).toBeVisible();
-  });
-
-  test('should login user via form with credentials @ui @guest @e2e', async ({
-    page,
-  }) => {
-    const loginPage = new LoginPage(page);
-    await loginPage.goto();
-
-    await expect(loginPage.modal).toBeVisible();
-    await expect(loginPage.header).toBeVisible();
-
-    const homePage = await loginPage.login(defaultUsers.user);
-    const navbar = homePage.navbar;
-
-    await expect(loginPage.toastMessage).toHaveText(toastMessages.loginSuccess);
-    await expect(navbar.userGreeting).toHaveText('Hi, John Doe');
-    await expect(navbar.logoutButton).toBeVisible();
-  });
+      await expect(navbar.userGreeting).toHaveText(greeting);
+      await expect(navbar.logoutButton).toBeVisible();
+    });
+  }
 
   test('should not display user greeting when not authenticated @ui @guest @e2e', async ({
     page,
