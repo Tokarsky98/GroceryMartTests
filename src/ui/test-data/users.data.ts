@@ -6,7 +6,9 @@ import {
 } from '@_config/env.config';
 import { LoginModel } from '@_ui/models/login.model';
 
-export const defaultUsers: Record<string, LoginModel> = {
+export type Role = 'admin' | 'user' | 'guest';
+
+export const defaultUsers: Record<Exclude<Role, 'guest'>, LoginModel> = {
   admin: {
     email: ADMIN_EMAIL,
     password: ADMIN_PASSWORD,
