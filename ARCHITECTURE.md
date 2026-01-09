@@ -4,21 +4,8 @@ This repository is showcasing enterprise-grade testing patterns for both UI and 
 
 ---
 
-## 🎯 Intended Audience
-
-This repository is intended for:
-
-- Senior QA Automation Engineers
-- Engineers designing or maintaining Playwright-based frameworks
-- Recruiters and hiring managers evaluating test architecture skills
-
-It focuses on **framework design and scalability**, not basic Playwright usage.
-
----
-
 ## Table of Contents
 
-- [Intended Audience](#-intended-audience)
 - [Architecture at a Glance](#-architecture-at-a-glance)
 - [Project Structure](#️-project-structure)
 - [Fixtures – Setup, Override & Merging](#-fixtures--setup-override--merging)
