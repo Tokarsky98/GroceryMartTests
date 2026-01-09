@@ -1,31 +1,16 @@
 # GroceryMartTests
 
-Hi! My name is Mateusz and I work as an QA Engineer with over three and a half years of experience, specializing in Playwright and TypeScript test automation from the very beginning of my career.
+Hi! My name is **Mateusz** and I am a **QA Automation Engineer** with almost 4 years of professional experience, specializing in **Playwright and TypeScript-based test automation frameworks**.
 
-On a daily basis, I use AI tools such as Claude, DeepL and GitHub Copilot. I also hold an ISTQB certification and continuously develop my skills. I am curious about the world, learn quickly and communicate effectively with people.
+I appreciate all feedback and thank you for your time!
 
-I appreciate every feedback and thank you for your time!
-
-## About
-
-This repository was created to showcase how test automation can effectively evolve when the application and the test automation project are maintained in separate repositories.
-
-It is an evolving collection of advanced Playwright solutions, including:
-
-- Environment configuration
-- UI and API test examples
-- Project structure
-- User session management and authentication handling
-- CI/CD integration through GitHub Actions is included
-- Scalable patterns and strategies implemented:
-  - Page Object Model
-  - Fixtures and helpers
-  - Organization and error prevention strategies
-
-The repository reflects practical knowledge from real-world projects using Playwright, even though it is still under development.
+---
 
 ## Table of Contents
 
+- [About This Repository](#about-this-repository)
+  - [Who This Is For](#who-this-is-for)
+  - [Key Highlights](#key-highlights)
 - [Prerequisites](#prerequisites)
 - [Installation and Setup](#installation-and-setup)
 - [Environment Variables](#environment-variables)
@@ -33,6 +18,35 @@ The repository reflects practical knowledge from real-world projects using Playw
 - [Test Tags](#test-tags)
 - [Reporting](#reporting)
 - [Troubleshooting](#troubleshooting)
+
+---
+
+## About This Repository
+
+This repository showcases **enterprise-grade test automation architecture** for both UI and API layers, demonstrating how scalable test frameworks are built and maintained independently from the application codebase.
+
+**📘 Architecture & Framework Documentation**
+➡️ See [ARCHITECTURE.md](ARCHITECTURE.md) for comprehensive technical documentation, design patterns, and architectural decisions.
+
+### Who This Is For
+
+This project is intended for:
+
+- **Senior QA Automation Engineers** evaluating framework design patterns
+- **Engineers** designing or maintaining Playwright-based frameworks
+- **Recruiters and hiring managers** assessing test architecture skills
+
+It focuses on **architecture, scalability, and maintainability** rather than introductory examples.
+
+### Key Highlights
+
+- ✅ Fixture composition and merging pattern
+- ✅ Page Object Model with component distinction
+- ✅ Hybrid authentication (API + UI)
+- ✅ TypeScript with path aliases
+- ✅ CI/CD integration with GitHub Actions
+- ✅ Comprehensive tagging and filtering system
+- ✅ Dual reporting strategy (Playwright HTML + JUnit)
 
 ## Prerequisites
 
@@ -47,21 +61,21 @@ The tests require the GroceryMartAI application to be running. All the necessary
 
 ## Installation and Setup
 
-1.  Install recommended Visual Studio Code extensions.
+1. Install recommended Visual Studio Code extensions.
 
-2.  Install project dependencies:
+2. Install project dependencies:
 
     ```bash
     npm install
     ```
 
-3.  Install Playwright browsers and required dependencies:
+3. Install Playwright browsers and required dependencies:
 
     ```bash
     npx playwright install --with-deps chromium
     ```
 
-4.  Create your environment configuration:
+4. Create your environment configuration:
 
     ```bash
     cp .env.example .env
@@ -69,8 +83,7 @@ The tests require the GroceryMartAI application to be running. All the necessary
 
 ## Environment Variables
 
-Fill in your `.env` file using the default accounts listed in the
-GroceryMartAI repository (section: `Default Test Accounts`)
+Fill in your `.env` file using the [default accounts listed in the GroceryMartAI repository](https://github.com/Tokarsky98/GroceryMartAI/?tab=readme-ov-file#-default-test-accounts)
 
 ```text
 BASE_URL='http://localhost:3000'
