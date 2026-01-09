@@ -57,7 +57,7 @@ Before running the tests, ensure you have:
 - [Node.js](https://nodejs.org/en) v20 or higher
 - [GroceryMartAI](https://github.com/Tokarsky98/GroceryMartAI) application running locally
 
-The tests require the GroceryMartAI application to be running. All the necessary steps are included in its own README file.
+**Important:** The tests require the GroceryMartAI application to be running at `http://localhost:3000`. Follow the [GroceryMartAI setup instructions](https://github.com/Tokarsky98/GroceryMartAI#installation-and-setup) to start the application before running tests.
 
 ## Installation and Setup
 
