@@ -46,7 +46,7 @@ test.describe('Verify products create operations', () => {
       expect(response.status()).toBe(403);
     });
 
-    test('should not create product without authentication @api @anonymous', async ({
+    test('should not create product without authentication @api @guest', async ({
       productsRequest,
     }) => {
       const productData = prepareRandomProduct();

@@ -1,7 +1,7 @@
 import { expect, test } from '@_src/merge.fixture';
 
 test.describe('Products API endpoint', () => {
-  test('get products should return status code 200 @api @anonymous @smoke', async ({
+  test('get products should return status code 200 @api @guest @smoke', async ({
     productsRequest,
   }) => {
     const response = await productsRequest.get();
@@ -9,7 +9,7 @@ test.describe('Products API endpoint', () => {
     expect(response.status()).toBe(200);
   });
 
-  test('get products should return at least one product @api @anonymous @smoke', async ({
+  test('get products should return at least one product @api @guest @smoke', async ({
     productsRequest,
   }) => {
     const expectedMinProductCount = 1;
@@ -21,7 +21,7 @@ test.describe('Products API endpoint', () => {
     );
   });
 
-  test('get products should return product object @api @anonymous @smoke', async ({
+  test('get products should return product object @api @guest @smoke', async ({
     productsRequest,
   }) => {
     const expectedRequiredFields = [

@@ -1,7 +1,10 @@
 import { expect, test } from '@_src/merge.fixture';
+import {
+  invalidCredentials,
+  invalidInputs,
+} from '@_src/ui/test-data/users.data';
 import { prepareRandomUser } from '@_ui/factories/user.factory';
 import { LoginPage } from '@_ui/pages/login.page';
-import { invalidCredentials, invalidInputs } from '@_ui/test-data/login.data';
 import {
   loginValidationMessages,
   signUpValidationMessages,
@@ -9,7 +12,7 @@ import {
 } from '@_ui/test-data/validation-messages.data';
 
 test.describe('Login UI validation', () => {
-  test('should display validation messages for empty fields @ui @anonymous @integration', async ({
+  test('should display validation messages for empty fields @ui @guest @integration', async ({
     page,
   }) => {
     const loginPage = new LoginPage(page);
@@ -25,7 +28,7 @@ test.describe('Login UI validation', () => {
     );
   });
 
-  test('should display validation message for empty email @ui @anonymous @integration', async ({
+  test('should display validation message for empty email @ui @guest @integration', async ({
     page,
   }) => {
     const loginPage = new LoginPage(page);
@@ -38,7 +41,7 @@ test.describe('Login UI validation', () => {
     );
   });
 
-  test('should display validation message for empty password @ui @anonymous @integration', async ({
+  test('should display validation message for empty password @ui @guest @integration', async ({
     page,
   }) => {
     const loginPage = new LoginPage(page);
@@ -51,7 +54,7 @@ test.describe('Login UI validation', () => {
     );
   });
 
-  test('should display validation message for wrong email @ui @anonymous @integration', async ({
+  test('should display validation message for wrong email @ui @guest @integration', async ({
     page,
   }) => {
     const loginPage = new LoginPage(page);
@@ -62,7 +65,7 @@ test.describe('Login UI validation', () => {
     await expect(loginPage.toastMessage).toHaveText(toastMessages.loginFailed);
   });
 
-  test('should display validation message for wrong password @ui @anonymous @integration', async ({
+  test('should display validation message for wrong password @ui @guest @integration', async ({
     page,
   }) => {
     const loginPage = new LoginPage(page);
@@ -75,7 +78,7 @@ test.describe('Login UI validation', () => {
 });
 
 test.describe('Sign Up UI validation', () => {
-  test('should display validation messages for empty fields @ui @anonymous @integration', async ({
+  test('should display validation messages for empty fields @ui @guest @integration', async ({
     page,
   }) => {
     const loginPage = new LoginPage(page);
@@ -102,7 +105,7 @@ test.describe('Sign Up UI validation', () => {
     );
   });
 
-  test('should display validation message when passwords do not match @ui @anonymous @integration', async ({
+  test('should display validation message when passwords do not match @ui @guest @integration', async ({
     page,
   }) => {
     const signUpUserData = prepareRandomUser();
@@ -125,7 +128,7 @@ test.describe('Sign Up UI validation', () => {
     );
   });
 
-  test('should display validation message when terms are not accepted @ui @anonymous @integration', async ({
+  test('should display validation message when terms are not accepted @ui @guest @integration', async ({
     page,
   }) => {
     const signUpUserData = prepareRandomUser();

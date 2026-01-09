@@ -32,7 +32,7 @@ test.describe('Verify products DELETE operations', () => {
       expect(responseGetNotDeleted.status()).toBe(200);
     });
 
-    test('should not delete product without authentication @api @anonymous', async ({
+    test('should not delete product without authentication @api @guest', async ({
       product,
       productsRequest,
     }) => {

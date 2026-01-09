@@ -3,7 +3,7 @@ import { HomePage } from '@_ui/pages/home.page';
 import { categories, products } from '@_ui/test-data/products.data';
 
 test.describe('Home Page - Products', () => {
-  test('should add product to cart @ui @anonymous @e2e', async ({ page }) => {
+  test('should add product to cart @ui @guest @e2e', async ({ page }) => {
     const homePage = new HomePage(page);
     const navbar = homePage.navbar;
     await homePage.goto();
@@ -17,7 +17,7 @@ test.describe('Home Page - Products', () => {
     await expect(navbar.cartBadge).toHaveText('1');
   });
 
-  test('should search for products @ui @anonymous @e2e', async ({ page }) => {
+  test('should search for products @ui @guest @e2e', async ({ page }) => {
     const homePage = new HomePage(page);
     await homePage.goto();
 
@@ -30,7 +30,7 @@ test.describe('Home Page - Products', () => {
     await expect(homePage.productCards).toHaveCount(1);
   });
 
-  test('should filter product by category @ui @anonymous @e2e', async ({
+  test('should filter product by category @ui @guest @e2e', async ({
     page,
   }) => {
     const homePage = new HomePage(page);
@@ -45,7 +45,7 @@ test.describe('Home Page - Products', () => {
     await expect(homePage.productCards).toHaveCount(1);
   });
 
-  test('should add multiple products to cart @ui @anonymous @e2e', async ({
+  test('should add multiple products to cart @ui @guest @e2e', async ({
     page,
   }) => {
     const homePage = new HomePage(page);
@@ -83,7 +83,7 @@ test.describe('Home Page - Products', () => {
     await expect(navbar.cartBadge).toHaveText('3');
   });
 
-  test('should search and then filter products @ui @anonymous @e2e', async ({
+  test('should search and then filter products @ui @guest @e2e', async ({
     page,
   }) => {
     const homePage = new HomePage(page);
@@ -101,7 +101,7 @@ test.describe('Home Page - Products', () => {
 });
 
 test.describe('Home Page - Negative Tests', () => {
-  test('should show no results when searching for non-existent product @ui @anonymous @e2e', async ({
+  test('should show no results when searching for non-existent product @ui @guest @e2e', async ({
     page,
   }) => {
     const homePage = new HomePage(page);
@@ -113,9 +113,7 @@ test.describe('Home Page - Negative Tests', () => {
     await expect(homePage.productCards).toHaveCount(0);
   });
 
-  test('should handle empty search input @ui @anonymous @e2e', async ({
-    page,
-  }) => {
+  test('should handle empty search input @ui @guest @e2e', async ({ page }) => {
     const homePage = new HomePage(page);
     await homePage.goto();
 
@@ -125,7 +123,7 @@ test.describe('Home Page - Negative Tests', () => {
     await expect(homePage.productCards).toHaveCount(12);
   });
 
-  test('should show no results for invalid category filter combination @ui @anonymous @e2e', async ({
+  test('should show no results for invalid category filter combination @ui @guest @e2e', async ({
     page,
   }) => {
     const homePage = new HomePage(page);
@@ -139,7 +137,7 @@ test.describe('Home Page - Negative Tests', () => {
     await expect(homePage.productCards).toHaveCount(0);
   });
 
-  test('should show all products when clearing filters @ui @anonymous @e2e', async ({
+  test('should show all products when clearing filters @ui @guest @e2e', async ({
     page,
   }) => {
     const homePage = new HomePage(page);

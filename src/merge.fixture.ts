@@ -1,7 +1,7 @@
 import { dataFixtureTest } from '@_api/fixtures/data.fixture';
-import { authenticatedPageTest } from '@_ui/fixtures/authenticated-page.fixture';
+import { userContextTest } from '@_src/ui/fixtures/user-context.fixture';
 import { mergeTests } from '@playwright/test';
 
-export const test = mergeTests(authenticatedPageTest, dataFixtureTest);
+export const test = mergeTests(userContextTest, dataFixtureTest);
 
 export { expect } from '@playwright/test';
