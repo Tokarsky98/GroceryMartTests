@@ -1,5 +1,5 @@
-import { createProducts } from '../../src/api/fixtures/manage-objects.fixture';
 import { prepareRandomProduct } from '@_api/factories/product.factory';
+import { createProducts } from '@_api/fixtures/manage-objects.fixture';
 import { expect, test } from '@_src/merge.fixture';
 
 test.describe('Verify products DELETE operations', () => {
