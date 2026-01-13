@@ -351,7 +351,7 @@ userProductsRequest: async ({ request }, use) => {
 
 **Key Improvement**: Using `addInitScript()` ensures the token is available before the page loads, avoiding race conditions and "invalid token" errors.
 
-**User Context Fixture** ([src/ui/fixtures/user-context.fixture.ts:12-36](src/ui/fixtures/user-context.fixture.ts#L12-L36)):
+**User Context Fixture** ([src/ui/fixtures/user-context.fixture.ts:12-35](src/ui/fixtures/user-context.fixture.ts#L12-L35)):
 
 ```typescript
 homePage: async ({ role, request, page }, use) => {
@@ -364,7 +364,7 @@ homePage: async ({ role, request, page }, use) => {
 
   // Get credentials for the role
   const credentials = defaultUsers[role];
-  const token = await getAuthToken(request, credentials);
+  const { token } = await getAuthenticatedSession(request, credentials);
 
   // Create authenticated page with token
   const homePage = await authenticatedPage(page, token);
@@ -372,6 +372,31 @@ homePage: async ({ role, request, page }, use) => {
   await use(homePage);
 },
 ```
+
+**Authenticated Session Factory** ([src/api/factories/auth-session.factory.ts](src/api/factories/auth-session.factory.ts)):
+
+```typescript
+export async function getAuthenticatedSession(
+  request: APIRequestContext,
+  credentials: LoginModel,
+): Promise<{ token: string }> {
+  const token = await getAuthToken(request, credentials);
+
+  // Reset backend state for this user - clear cart before test starts
+  const cartRequest = new CartRequest(request, {
+    Authorization: `Bearer ${token}`,
+  });
+  await cartRequest.delete();
+
+  return { token };
+}
+```
+
+**Key Design Decision**: The `getAuthenticatedSession` factory performs **setup cleanup** by clearing the cart **before** each test starts. This ensures:
+- ✅ Tests always start with a clean cart state
+- ✅ No interference from previous test data
+- ✅ Simpler fixture logic (cleanup in setup, not teardown)
+- ✅ More reliable test execution
 
 **Authentication Token Factory** ([src/api/factories/auth-token.factory.ts](src/api/factories/auth-token.factory.ts)):
 
@@ -398,9 +423,10 @@ export async function getAuthToken(
 
 - ✅ Hybrid approach – API login for speed, UI validation for E2E
 - ✅ No repetitive UI logins – Session stored in localStorage via `addInitScript()`
-- ✅ Separation of concerns – Token extraction (`getAuthToken`) vs. header formatting (`getAuthHeader`)
+- ✅ Separation of concerns – Token extraction (`getAuthToken`) vs. session setup (`getAuthenticatedSession`) vs. header formatting (`getAuthHeader`)
 - ✅ Race-condition free – Token injected before page loads
 - ✅ Reusable – Same token factory used for both API and UI tests
+- ✅ Clean state guarantee – Cart cleared before each authenticated test via `getAuthenticatedSession`
 
 ---
 
@@ -845,7 +871,7 @@ for (const { role, greeting } of authTestCases) {
 
 ### 2. Automatic Resource Cleanup
 
-**Pattern** ([src/api/fixtures/manage-objects.fixture.ts](src/api/fixtures/manage-objects.fixture.ts)):
+**Pattern 1 - Teardown Cleanup** ([src/api/fixtures/manage-objects.fixture.ts](src/api/fixtures/manage-objects.fixture.ts)):
 
 ```typescript
 export const createProducts = async (
@@ -864,7 +890,7 @@ export const createProducts = async (
 
   await use(results); // Test runs here
 
-  // Automatic cleanup after test
+  // Automatic cleanup after test (teardown)
   for (const obj of results) {
     const response = await adminProductsRequest.delete(obj.id);
     expect([200, 404]).toContain(response.status());
@@ -872,11 +898,36 @@ export const createProducts = async (
 };
 ```
 
+**Pattern 2 - Setup Cleanup** ([src/api/factories/auth-session.factory.ts](src/api/factories/auth-session.factory.ts)):
+
+```typescript
+export async function getAuthenticatedSession(
+  request: APIRequestContext,
+  credentials: LoginModel,
+): Promise<{ token: string }> {
+  const token = await getAuthToken(request, credentials);
+
+  // Clear cart BEFORE test starts (setup cleanup)
+  const cartRequest = new CartRequest(request, {
+    Authorization: `Bearer ${token}`,
+  });
+  await cartRequest.delete();
+
+  return { token };
+}
+```
+
+**When to use each pattern:**
+
+- **Teardown Cleanup**: For resources created during the test (products, users) - clean up after test completes
+- **Setup Cleanup**: For persistent user state (cart, preferences) - ensure clean state before test starts
+
 **Benefits**:
 
 - Ensures clean test environment
 - No leftover test data
 - Reliable test execution
+- Setup cleanup prevents test interdependencies
 
 ### 3. Environment Configuration Validation
 
