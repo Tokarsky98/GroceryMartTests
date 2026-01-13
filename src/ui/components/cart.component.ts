@@ -49,8 +49,6 @@ export class CartItemComponent {
 
 export class CartComponent {
   readonly root: Locator;
-  readonly cartBadge: Locator;
-  readonly cartDropdown: Locator;
   readonly cartItems: Locator;
   readonly emptyCartMessage: Locator;
   readonly cartTotal: Locator;
@@ -58,23 +56,12 @@ export class CartComponent {
 
   constructor(root: Locator) {
     this.root = root;
-    this.cartBadge = root.locator('.cart-badge');
-    this.cartDropdown = root.locator('.cart-dropdown');
-    this.cartItems = this.cartDropdown.locator('.cart-item');
-    this.emptyCartMessage = this.cartDropdown.getByText('Your cart is empty');
-    this.cartTotal = this.cartDropdown.locator('.cart-total');
-    this.checkoutButton = this.cartDropdown.getByRole('button', {
+    this.cartItems = root.locator('.cart-item');
+    this.emptyCartMessage = root.getByText('Your cart is empty');
+    this.cartTotal = root.locator('.cart-total');
+    this.checkoutButton = root.getByRole('button', {
       name: 'Proceed to Checkout',
     });
-  }
-
-  async openCart(): Promise<void> {
-    await this.cartBadge.click();
-  }
-
-  async getCartBadgeCount(): Promise<string> {
-    const badgeText = await this.cartBadge.locator('.badge').innerText();
-    return badgeText;
   }
 
   async getCartTotal(): Promise<string> {
