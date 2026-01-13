@@ -1,4 +1,4 @@
-import { getAuthToken } from '@_src/api/factories/auth-token.factory';
+import { getAuthenticatedSession } from '@_src/api/factories/auth-session.factory';
 import { authenticatedPage } from '@_ui/helpers/authenticated-page.helper';
 import { HomePage } from '@_ui/pages/home.page';
 import { type Role, defaultUsers } from '@_ui/test-data/users.data';
@@ -25,7 +25,7 @@ export const userContextTest = base.extend<UserContextFixture>({
 
     // Get credentials for the role
     const credentials = defaultUsers[role];
-    const token = await getAuthToken(request, credentials);
+    const { token } = await getAuthenticatedSession(request, credentials);
 
     // Create a new page with authenticated session
     const homePage = await authenticatedPage(page, token);
