@@ -285,12 +285,13 @@ import { defaultUsers } from '@_ui/test-data/users.data';
 
 ### 🧪 API Tests – Token-Based Authentication
 
-**Flow** ([src/api/factories/auth-header.factory.ts](src/api/factories/auth-header.factory.ts)):
+**Flow** ([src/api/factories/auth-token.factory.ts](src/api/factories/auth-token.factory.ts) & [auth-header.factory.ts](src/api/factories/auth-header.factory.ts)):
 
-1. Factory function `getAuthHeader(request, credentials)` makes API call to `/api/auth/login`
-2. Extracts JWT token from response
-3. Returns `{ Authorization: "Bearer <token>" }` headers object
-4. Headers passed to all subsequent requests
+1. Factory function `getAuthToken(request, credentials)` makes API call to `/api/auth/login`
+2. Extracts JWT token from response and returns raw token string
+3. Factory function `getAuthHeader(request, credentials)` wraps token with `Bearer` prefix
+4. Returns `{ Authorization: "Bearer <token>" }` headers object
+5. Headers passed to all subsequent requests
 
 **Request Objects** ([src/api/requests/products.request.ts](src/api/requests/products.request.ts)):
 
@@ -343,34 +344,63 @@ userProductsRequest: async ({ request }, use) => {
 
 **Flow** ([src/ui/helpers/authenticated-page.helper.ts](src/ui/helpers/authenticated-page.helper.ts)):
 
-1. Create new browser page
-2. Make API login call to get JWT token (reusing API auth logic!)
-3. Store token in `localStorage.token`
-4. Reload page to apply authenticated state
-5. Return `HomePage` instance in authenticated state
+1. Receive shared Playwright `page` fixture and raw JWT token
+2. Use `page.addInitScript()` to inject token into `localStorage` **before** page navigation
+3. Navigate to application (`BASE_URL`)
+4. Return `HomePage` instance in authenticated state
 
-**User Context Fixture** ([src/ui/fixtures/user-context.fixture.ts:12-30](src/ui/fixtures/user-context.fixture.ts#L12-L30)):
+**Key Improvement**: Using `addInitScript()` ensures the token is available before the page loads, avoiding race conditions and "invalid token" errors.
+
+**User Context Fixture** ([src/ui/fixtures/user-context.fixture.ts:12-36](src/ui/fixtures/user-context.fixture.ts#L12-L36)):
 
 ```typescript
-homePage: async ({ role, page }, use) => {
+homePage: async ({ role, request, page }, use) => {
   if (role === 'guest') {
     const homePage = new HomePage(page);
     await homePage.goto();
     await use(homePage);
-  } else {
-    // For 'admin' or 'user' role
-    const credentials = defaultUsers[role];
-    const homePage = await authenticatedPage(page, credentials);
-    await use(homePage);
+    return;
   }
+
+  // Get credentials for the role
+  const credentials = defaultUsers[role];
+  const token = await getAuthToken(request, credentials);
+
+  // Create authenticated page with token
+  const homePage = await authenticatedPage(page, token);
+
+  await use(homePage);
 },
+```
+
+**Authentication Token Factory** ([src/api/factories/auth-token.factory.ts](src/api/factories/auth-token.factory.ts)):
+
+```typescript
+export async function getAuthToken(
+  request: APIRequestContext,
+  loginData: LoginModel,
+): Promise<string> {
+  const loginRequest = new LoginRequest(request);
+  const loginResponse = await loginRequest.post(loginData);
+  await expect(loginResponse).toBeOK();
+
+  const loginResponseJson = await loginResponse.json();
+  const token = loginResponseJson.token;
+
+  expect(token, 'Auth token should be present in response').toBeDefined();
+  expect(typeof token, 'Auth token should be a string').toBe('string');
+
+  return token; // Returns raw token without "Bearer " prefix
+}
 ```
 
 **Benefits**:
 
 - ✅ Hybrid approach – API login for speed, UI validation for E2E
-- ✅ No repetitive UI logins – Session stored in localStorage
-- ✅ Separation of concerns – Authentication setup vs. feature testing
+- ✅ No repetitive UI logins – Session stored in localStorage via `addInitScript()`
+- ✅ Separation of concerns – Token extraction (`getAuthToken`) vs. header formatting (`getAuthHeader`)
+- ✅ Race-condition free – Token injected before page loads
+- ✅ Reusable – Same token factory used for both API and UI tests
 
 ---
 
@@ -939,30 +969,32 @@ test('get products should return all required fields @api @guest @smoke', async 
 ```typescript
 export const authenticatedPage = async (
   page: Page,
-  loginModel: LoginModel,
+  token: string,
 ): Promise<HomePage> => {
-  const apiContext = await page.request.newContext();
-  const authHeaders = await getAuthHeader(apiContext, loginModel);
-
-  // Extract token from headers
-  const token = authHeaders.Authorization.replace('Bearer ', '');
-
-  // Store in localStorage (UI session)
-  await page.goto('/');
-  await page.evaluate((token) => {
+  // Inject token into localStorage before page loads
+  await page.addInitScript((token) => {
     localStorage.setItem('token', token);
   }, token);
 
-  await page.reload();
+  await page.goto(BASE_URL);
+
   return new HomePage(page);
 };
 ```
+
+**Why `addInitScript()`?**
+
+- Script executes **before** any page code runs
+- Prevents "invalid token" race conditions
+- Token is available immediately when application loads
+- More reliable than `page.evaluate()` after navigation
 
 **Benefits**:
 
 - Fast setup (API) + UI validation
 - Best of both worlds
 - Realistic user sessions
+- Race-condition free authentication
 
 ### 7. Test Data Override at Multiple Levels
 
