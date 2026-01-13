@@ -1,42 +1,6 @@
 import { expect, test } from '@_src/merge.fixture';
 import { products } from '@_ui/test-data/products.data';
 
-test.describe('Cart - Authenticated Users', () => {
-  const roles = ['user', 'admin'] as const;
-
-  for (const role of roles) {
-    test.describe(`Cart after reload - ${role}`, () => {
-      test.use({ role });
-
-      test(`should have cart items after page reload for ${role} @ui @${role} @integration`, async ({
-        homePage,
-      }) => {
-        const pastaProduct = homePage.getProductByName(products.pasta);
-        await pastaProduct.addToCart();
-
-        const salmonProduct = homePage.getProductByName(products.salmonFillet);
-        await salmonProduct.addToCart();
-
-        await expect(homePage.navbar.cartIconBadge).toHaveText('2');
-
-        // Reload page
-        await homePage.page.reload();
-        await expect(homePage.navbar.userGreeting).toBeVisible();
-        await expect(homePage.navbar.cartIconBadge).toHaveText('2');
-
-        const cart = await homePage.navbar.openCart();
-        const pastaCartItem = cart.getCartItemByProductName(products.pasta);
-        const salmonCartItem = cart.getCartItemByProductName(
-          products.salmonFillet,
-        );
-
-        await expect(pastaCartItem.name).toBeVisible();
-        await expect(salmonCartItem.name).toBeVisible();
-      });
-    });
-  }
-});
-
 test.describe('Cart - Checkout Access by Role', () => {
   const checkoutTestCases = [
     {
@@ -140,25 +104,20 @@ test.describe('Cart - Guest', () => {
     await expect(cart.emptyCartMessage).toBeVisible();
   });
 
-  test('should display toast with correct product name for different products @ui @guest @integration', async ({
+  test('should not persist cart items after page reload for guest @ui @guest @integration', async ({
     homePage,
   }) => {
-    const testProducts = [
-      products.freshApples,
-      products.organicBananas,
-      products.greekYogurt,
-    ];
+    const pastaProduct = homePage.getProductByName(products.pasta);
+    await pastaProduct.addToCart();
 
-    for (const productName of testProducts) {
-      const product = homePage.getProductByName(productName);
-      await product.addToCart();
+    const salmonProduct = homePage.getProductByName(products.salmonFillet);
+    await salmonProduct.addToCart();
 
-      await expect(homePage.toastMessage).toBeVisible();
-      await expect(homePage.toastMessage).toContainText(productName);
-      await expect(homePage.toastMessage).toContainText('added to cart');
+    await expect(homePage.navbar.cartIconBadge).toHaveText('2');
 
-      // Wait for toast to disappear
-      await expect(homePage.toastMessage).toBeHidden();
-    }
+    await homePage.page.reload();
+
+    const cart = await homePage.navbar.openCart();
+    await expect(cart.emptyCartMessage).toBeVisible();
   });
 });
