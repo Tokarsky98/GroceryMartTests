@@ -1,4 +1,4 @@
-import { prepareRandomProduct } from '../factories/product.factory';
+import { prepareRandomProduct } from '@_api/factories/product.factory';
 import { ProductsModel } from '@_api/models/products.model';
 import { ProductsRequest } from '@_api/requests/products.request';
 import { ProductResponseModel } from '@_src/api/models/products-response.model';

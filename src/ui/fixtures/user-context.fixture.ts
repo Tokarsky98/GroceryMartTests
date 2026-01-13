@@ -1,7 +1,7 @@
-import { type Role, defaultUsers } from '../test-data/users.data';
-import { getAuthHeader } from '@_api/factories/auth-header.factory';
+import { getAuthenticatedSession } from '@_src/api/factories/auth-session.factory';
 import { authenticatedPage } from '@_ui/helpers/authenticated-page.helper';
 import { HomePage } from '@_ui/pages/home.page';
+import { type Role, defaultUsers } from '@_ui/test-data/users.data';
 import { test as base } from '@playwright/test';
 
 type UserContextFixture = {
@@ -15,7 +15,7 @@ export const userContextTest = base.extend<UserContextFixture>({
   role: ['guest', { option: true }],
 
   // Provides a HomePage instance based on the current role
-  homePage: async ({ role, request, browser, page }, use) => {
+  homePage: async ({ role, request, page }, use) => {
     if (role === 'guest') {
       const homePage = new HomePage(page);
       await homePage.goto();
@@ -25,12 +25,11 @@ export const userContextTest = base.extend<UserContextFixture>({
 
     // Get credentials for the role
     const credentials = defaultUsers[role];
-    const headers = await getAuthHeader(request, credentials);
+    const { token } = await getAuthenticatedSession(request, credentials);
 
     // Create a new page with authenticated session
-    const homePage = await authenticatedPage(browser, headers);
+    const homePage = await authenticatedPage(page, token);
 
     await use(homePage);
-    await homePage.page.close();
   },
 });

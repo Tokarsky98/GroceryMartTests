@@ -14,7 +14,7 @@ test.describe('Home Page - Products', () => {
     await expect(homePage.toastMessage).toContainText(
       `${await pastaProduct.getName()} added to cart!`,
     );
-    await expect(navbar.cartBadge).toHaveText('1');
+    await expect(navbar.cartIconBadge).toHaveText('1');
   });
 
   test('should search for products @ui @guest @e2e', async ({ page }) => {
@@ -64,7 +64,7 @@ test.describe('Home Page - Products', () => {
     await expect(homePage.toastMessage).toContainText(
       `${await firstProduct.getName()} added to cart!`,
     );
-    await expect(navbar.cartBadge).toHaveText('1');
+    await expect(navbar.cartIconBadge).toHaveText('1');
 
     // Add second product
     const secondProduct = homePage.getProductByName(productsToAdd[1]);
@@ -72,7 +72,7 @@ test.describe('Home Page - Products', () => {
     await expect(homePage.toastMessage).toContainText(
       `${await secondProduct.getName()} added to cart!`,
     );
-    await expect(navbar.cartBadge).toHaveText('2');
+    await expect(navbar.cartIconBadge).toHaveText('2');
 
     // Add third product
     const thirdProduct = homePage.getProductByName(productsToAdd[2]);
@@ -80,7 +80,7 @@ test.describe('Home Page - Products', () => {
     await expect(homePage.toastMessage).toContainText(
       `${await thirdProduct.getName()} added to cart!`,
     );
-    await expect(navbar.cartBadge).toHaveText('3');
+    await expect(navbar.cartIconBadge).toHaveText('3');
   });
 
   test('should search and then filter products @ui @guest @e2e', async ({

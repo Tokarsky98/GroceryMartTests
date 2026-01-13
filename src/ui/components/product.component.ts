@@ -25,7 +25,8 @@ export class ProductComponent {
     return await this.name.innerText();
   }
 
-  async getPrice(): Promise<string> {
-    return await this.price.innerText();
+  async getPrice(): Promise<number> {
+    const text = await this.price.innerText();
+    return parseFloat(text.replace('$', ''));
   }
 }
