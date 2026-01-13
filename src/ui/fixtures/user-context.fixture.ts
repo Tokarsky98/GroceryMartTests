@@ -15,7 +15,7 @@ export const userContextTest = base.extend<UserContextFixture>({
   role: ['guest', { option: true }],
 
   // Provides a HomePage instance based on the current role
-  homePage: async ({ role, request, browser, page }, use) => {
+  homePage: async ({ role, request, page }, use) => {
     if (role === 'guest') {
       const homePage = new HomePage(page);
       await homePage.goto();
@@ -28,7 +28,7 @@ export const userContextTest = base.extend<UserContextFixture>({
     const headers = await getAuthHeader(request, credentials);
 
     // Create a new page with authenticated session
-    const homePage = await authenticatedPage(browser, headers);
+    const homePage = await authenticatedPage(page, headers);
 
     await use(homePage);
     await homePage.page.close();
