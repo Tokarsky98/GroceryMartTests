@@ -71,7 +71,7 @@ test.describe('Cart - Guest', () => {
     const cart = await homePage.navbar.openCart();
     const cartItem = cart.getCartItemByProductName(products.pasta);
 
-    await expect(cartItem.root).toBeVisible();
+    await expect(cartItem.name).toBeVisible();
     await expect(cartItem.name).toHaveText(products.pasta);
   });
 
@@ -100,7 +100,7 @@ test.describe('Cart - Guest', () => {
     const cartItem = cart.getCartItemByProductName(products.pasta);
     await cartItem.remove();
 
-    await expect(cartItem.root).toBeHidden();
+    await expect(cartItem.name).toBeHidden();
     await expect(cart.emptyCartMessage).toBeVisible();
   });
 
@@ -119,5 +119,32 @@ test.describe('Cart - Guest', () => {
 
     const cart = await homePage.navbar.openCart();
     await expect(cart.emptyCartMessage).toBeVisible();
+  });
+});
+
+test.describe('Cart - Admin', () => {
+  test.use({ role: 'admin' });
+
+  test('should persist cart items after page reload for admin @ui @admin @integration', async ({
+    homePage,
+  }) => {
+    const pastaProduct = homePage.getProductByName(products.pasta);
+    await pastaProduct.addToCart();
+
+    const salmonProduct = homePage.getProductByName(products.salmonFillet);
+    await salmonProduct.addToCart();
+
+    await expect(homePage.navbar.cartIconBadge).toHaveText('2');
+
+    await homePage.page.reload();
+
+    await expect(homePage.navbar.cartIconBadge).toHaveText('2');
+
+    const cart = await homePage.navbar.openCart();
+    const pastaCartItem = cart.getCartItemByProductName(products.pasta);
+    const salmonCartItem = cart.getCartItemByProductName(products.salmonFillet);
+
+    await expect(pastaCartItem.name).toBeVisible();
+    await expect(salmonCartItem.name).toBeVisible();
   });
 });
