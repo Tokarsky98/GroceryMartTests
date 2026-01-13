@@ -31,6 +31,5 @@ export const userContextTest = base.extend<UserContextFixture>({
     const homePage = await authenticatedPage(page, token);
 
     await use(homePage);
-    await homePage.page.close();
   },
 });
